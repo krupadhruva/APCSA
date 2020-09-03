@@ -65,6 +65,29 @@ public final class P7_Dhruva_Krupa_ToolKit {
         reset();
     }
 
+    public static void main(String[] args) {
+        P7_Dhruva_Krupa_ToolKit toolKit = new P7_Dhruva_Krupa_ToolKit(800, 600);
+        DrawingTool pen = toolKit.getPen();
+        pen.down();
+
+        // Test drawing a circle at center with our lower left corner based coordinate system
+        Point localCenter = new Point(Math.abs(toolKit.origin.x), Math.abs(toolKit.origin.y));
+        toolKit.move(localCenter);
+        pen.drawCircle(10);
+        Point localPos = new Point((int) pen.getXPos(), (int) pen.getYPos());
+
+        // Test drawing another circle at center using gpdraw coordinate system
+        Point gpdrawCenter = new Point(0, 0);
+        toolKit.move(toolKit.gpdrawToLocal(gpdrawCenter.x, gpdrawCenter.y));
+        pen.drawCircle(15);
+        Point gpPos = new Point((int) pen.getXPos(), (int) pen.getYPos());
+
+        // Note: Took help to test the translation
+        if (!localPos.equals(gpPos)) {
+            throw new AssertionError("Translating local to gpdraw coordinate system failed");
+        }
+    }
+
     /**
      * Helper method to draw Y axis scale for vertical alignment
      * with 25 count granularity
@@ -124,6 +147,19 @@ public final class P7_Dhruva_Krupa_ToolKit {
      */
     public Random getRandom() {
         return random;
+    }
+
+    /**
+     * Translates from gpdraw coordinate system to local
+     *
+     * @param x X in gpdraw coordinate system
+     * @param y Y in gpdraw coordinate system
+     * @return Point in local coordinate system
+     */
+    public Point gpdrawToLocal(int x, int y) {
+        // Since our local coordinate is at a negative offset along both X & Y
+        // translate them along both X & Y to reach gpdraw coordinate system
+        return new Point(x + Math.abs(origin.x), y + Math.abs(origin.y));
     }
 
     /**
