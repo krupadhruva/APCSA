@@ -32,21 +32,17 @@ public final class P7_Dhruva_Krupa_HouseDriver {
         Color insideColor = new Color(240, 222, 170);
         Color[] windowColors = new Color[] {Color.BLUE, trunkColor, roofColor, doorColor};
 
-        // Sky
-        toolKit.move(400, 300);
-        pen.setColor(skyColor);
-        pen.down();
-        pen.fillRect(800, 600);
+        // Sky & grass background
+        P7_Dhruva_Krupa_Background background =
+                new P7_Dhruva_Krupa_Background(toolKit, 100, skyColor, grassColor);
+        background.draw();
 
         // Sun
         P7_Dhruva_Krupa_Sun sun =
                 new P7_Dhruva_Krupa_Sun(toolKit, new Point(600, 450), 30, 60, Color.ORANGE);
         sun.draw();
 
-        // Grass
-        toolKit.move(400, 50);
-        pen.setColor(grassColor);
-        pen.fillRect(800, 100);
+        // Grass sprouts
         P7_Dhruva_Krupa_RandomFlock sprouts =
                 new P7_Dhruva_Krupa_RandomFlock(
                         toolKit,
