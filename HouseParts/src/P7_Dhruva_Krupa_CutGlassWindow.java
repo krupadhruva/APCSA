@@ -5,8 +5,8 @@ import java.util.PrimitiveIterator;
 import java.util.Random;
 
 /**
- * Draws a window with random colors from input with cut glass like appearance
- * Hard coded to draw 5 rows of cut glass appearance
+ * Draws a window with random colors from input with cut glass like appearance Hard coded to draw 5
+ * rows of cut glass appearance
  */
 public class P7_Dhruva_Krupa_CutGlassWindow {
 
@@ -27,14 +27,20 @@ public class P7_Dhruva_Krupa_CutGlassWindow {
      * Draws a random chequered pattern window
      *
      * @param toolKit Common drawing tools
-     * @param origin  Location of the window
-     * @param width   Width of the window
-     * @param height  Height of the window
-     * @param colors  Array of colors to randomly pick from. Repeating colors will increase probability of that color
-     * @param inside  Interior color to draw the background of the window
+     * @param origin Location of the window
+     * @param width Width of the window
+     * @param height Height of the window
+     * @param colors Array of colors to randomly pick from. Repeating colors will increase
+     *     probability of that color
+     * @param inside Interior color to draw the background of the window
      */
-    public P7_Dhruva_Krupa_CutGlassWindow(P7_Dhruva_Krupa_ToolKit toolKit, Point origin, int width, int height,
-                                          Color[] colors, Color inside) {
+    public P7_Dhruva_Krupa_CutGlassWindow(
+            P7_Dhruva_Krupa_ToolKit toolKit,
+            Point origin,
+            int width,
+            int height,
+            Color[] colors,
+            Color inside) {
         this.toolKit = toolKit;
         this.origin = origin;
         this.width = width;
@@ -43,22 +49,38 @@ public class P7_Dhruva_Krupa_CutGlassWindow {
         this.inside = inside;
     }
 
+    /**
+     * Simple driver to test methods of the class
+     *
+     * @param args Command line arguments
+     */
     public static void main(String[] args) {
         P7_Dhruva_Krupa_ToolKit toolKit = new P7_Dhruva_Krupa_ToolKit(800, 600);
         P7_Dhruva_Krupa_CutGlassWindow window =
-                new P7_Dhruva_Krupa_CutGlassWindow(toolKit, new Point(100, 100), 100, 200, new Color[]{
-                        Color.ORANGE, Color.GREEN, Color.RED, Color.RED, Color.YELLOW, Color.BLUE,
-                        Color.CYAN}, Color.YELLOW);
+                new P7_Dhruva_Krupa_CutGlassWindow(
+                        toolKit,
+                        new Point(100, 100),
+                        100,
+                        200,
+                        new Color[] {
+                            Color.ORANGE,
+                            Color.GREEN,
+                            Color.RED,
+                            Color.RED,
+                            Color.YELLOW,
+                            Color.BLUE,
+                            Color.CYAN
+                        },
+                        Color.YELLOW);
         window.draw();
     }
 
     /**
      * Method to actually draw window based based on attributes
      *
-     * Cut glass is basically a random color picked from the array of
-     * colors with modified alpha to increase transparency. Outline of
-     * the individual panel is drawn with the random color picked to create
-     * a slight border for each piece.
+     * <p>Cut glass is basically a random color picked from the array of colors with modified alpha
+     * to increase transparency. Outline of the individual panel is drawn with the random color
+     * picked to create a slight border for each piece.
      */
     public void draw() {
         toolKit.reset();

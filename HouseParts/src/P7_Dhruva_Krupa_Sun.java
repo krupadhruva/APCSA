@@ -18,14 +18,18 @@ public class P7_Dhruva_Krupa_Sun {
     /**
      * Draws Sun with alternating sized rays pointing radially
      *
-     * @param toolKit    Common drawing tools
-     * @param origin     Location of the origin of the core
+     * @param toolKit Common drawing tools
+     * @param origin Location of the origin of the core
      * @param coreRadius Radius of the core circle
-     * @param rayRadius  Radius of the longest ray of sun
-     * @param color      Color of the sun
+     * @param rayRadius Radius of the longest ray of sun
+     * @param color Color of the sun
      */
-    public P7_Dhruva_Krupa_Sun(P7_Dhruva_Krupa_ToolKit toolKit, Point origin,
-                               int coreRadius, int rayRadius, Color color) {
+    public P7_Dhruva_Krupa_Sun(
+            P7_Dhruva_Krupa_ToolKit toolKit,
+            Point origin,
+            int coreRadius,
+            int rayRadius,
+            Color color) {
         this.toolKit = toolKit;
         this.origin = origin;
         this.coreRadius = coreRadius;
@@ -33,15 +37,19 @@ public class P7_Dhruva_Krupa_Sun {
         this.color = color;
     }
 
+    /**
+     * Simple driver to test methods of the class
+     *
+     * @param args Command line arguments
+     */
     public static void main(String[] args) {
         P7_Dhruva_Krupa_ToolKit toolKit = new P7_Dhruva_Krupa_ToolKit(800, 600);
-        P7_Dhruva_Krupa_Sun sun = new P7_Dhruva_Krupa_Sun(toolKit, new Point(500, 500), 50, 80, Color.ORANGE);
+        P7_Dhruva_Krupa_Sun sun =
+                new P7_Dhruva_Krupa_Sun(toolKit, new Point(500, 500), 50, 80, Color.ORANGE);
         sun.draw();
     }
 
-    /**
-     * Draw the sun with 24 rays of alternating lengths
-     */
+    /** Draw the sun with 24 rays of alternating lengths */
     public void draw() {
         toolKit.reset();
 

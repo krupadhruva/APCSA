@@ -4,14 +4,11 @@ import java.awt.*;
 import java.util.PrimitiveIterator;
 import java.util.Random;
 
-/**
- * Draw wall with multiple layers of overlapping brick work
- * Attempting to show stone cladding
- */
+/** Draw wall with multiple layers of overlapping brick work Attempting to show stone cladding */
 public class P7_Dhruva_Krupa_Wall {
 
     /** Pen width to draw brick outlines */
-    static private final int outlineWidth = 2;
+    private static final int outlineWidth = 2;
     /** Brick height */
     private final int brickHeight;
     /** Width of the brick */
@@ -30,16 +27,22 @@ public class P7_Dhruva_Krupa_Wall {
     /**
      * Construct a wall with overlapping brick work
      *
-     * @param toolKit     Common drawing tools
-     * @param origin      Location of the wall
-     * @param width       Width of the wall
-     * @param height      Height of the wall
-     * @param brickWidth  Width of the brick
+     * @param toolKit Common drawing tools
+     * @param origin Location of the wall
+     * @param width Width of the wall
+     * @param height Height of the wall
+     * @param brickWidth Width of the brick
      * @param brickHeight Brick height
-     * @param color       Brick color
+     * @param color Brick color
      */
-    public P7_Dhruva_Krupa_Wall(P7_Dhruva_Krupa_ToolKit toolKit, Point origin, int width, int height,
-                                int brickWidth, int brickHeight, Color color) {
+    public P7_Dhruva_Krupa_Wall(
+            P7_Dhruva_Krupa_ToolKit toolKit,
+            Point origin,
+            int width,
+            int height,
+            int brickWidth,
+            int brickHeight,
+            Color color) {
         this.toolKit = toolKit;
         this.origin = origin;
         this.width = width;
@@ -56,15 +59,19 @@ public class P7_Dhruva_Krupa_Wall {
         this.color = color;
     }
 
+    /**
+     * Simple driver to test methods of the class
+     *
+     * @param args Command line arguments
+     */
     public static void main(String[] args) {
         P7_Dhruva_Krupa_ToolKit toolKit = new P7_Dhruva_Krupa_ToolKit(800, 600);
-        P7_Dhruva_Krupa_Wall wall = new P7_Dhruva_Krupa_Wall(toolKit, new Point(100, 100), 300, 200, 50, 20, Color.RED);
+        P7_Dhruva_Krupa_Wall wall =
+                new P7_Dhruva_Krupa_Wall(toolKit, new Point(100, 100), 300, 200, 50, 20, Color.RED);
         wall.draw();
     }
 
-    /**
-     * Draws a wall with random placement of bricks with outlines
-     */
+    /** Draws a wall with random placement of bricks with outlines */
     public void draw() {
         toolKit.move(origin);
 

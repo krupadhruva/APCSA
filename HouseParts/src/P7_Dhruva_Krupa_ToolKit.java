@@ -7,28 +7,26 @@ import java.util.Random;
 /**
  * Class providing basic drawing tools like pen
  *
- * Since we use a different coordinate system with lower left corner treated as (0,0),
- * we provide helper methods to transform from gpdraw coordinate system to our system
+ * <p>Since we use a different coordinate system with lower left corner treated as (0,0), we provide
+ * helper methods to transform from gpdraw coordinate system to our system
  *
- * Took help to implement the following:
- * Tool kit provides a single instance of random number generator with support for
- * custom seed value to ensure reproducibility across runs
+ * <p>Took help to implement the following: Tool kit provides a single instance of random number
+ * generator with support for custom seed value to ensure reproducibility across runs
  */
 public final class P7_Dhruva_Krupa_ToolKit {
 
     /** Our view of origin - Lower left corner of the sheet */
-    final private Point origin;
+    private final Point origin;
     /** Pen used for drawing objects */
-    final private DrawingTool pen;
+    private final DrawingTool pen;
     /** Common random number generator across shapes */
-    final private Random random;
+    private final Random random;
 
     /**
-     * Construct a toolkit with SketchPad and a pen
-     * Uses lower left corner as the origin instead of sheet centre to make it easy to layout
-     * objects without having to deal with negative numbers.
+     * Construct a toolkit with SketchPad and a pen Uses lower left corner as the origin instead of
+     * sheet centre to make it easy to layout objects without having to deal with negative numbers.
      *
-     * @param width  Width of the drawing area
+     * @param width Width of the drawing area
      * @param height Height of the drawing area
      */
     public P7_Dhruva_Krupa_ToolKit(int width, int height) {
@@ -38,7 +36,7 @@ public final class P7_Dhruva_Krupa_ToolKit {
     /**
      * Construct tool kit from existing SketchPad
      *
-     * @param pad  Existing instance
+     * @param pad Existing instance
      * @param seed Random number generator seed. Can be null.
      */
     public P7_Dhruva_Krupa_ToolKit(SketchPad pad, Long seed) {
@@ -48,7 +46,7 @@ public final class P7_Dhruva_Krupa_ToolKit {
     /**
      * Construct toolkit from an existing DrawingTool (pen)
      *
-     * @param pen  Existing instance
+     * @param pen Existing instance
      * @param seed Random number generator seed. Can be null.
      */
     public P7_Dhruva_Krupa_ToolKit(DrawingTool pen, Long seed) {
@@ -65,6 +63,11 @@ public final class P7_Dhruva_Krupa_ToolKit {
         reset();
     }
 
+    /**
+     * Simple driver to test methods of the class
+     *
+     * @param args Command line arguments
+     */
     public static void main(String[] args) {
         P7_Dhruva_Krupa_ToolKit toolKit = new P7_Dhruva_Krupa_ToolKit(800, 600);
         DrawingTool pen = toolKit.getPen();
@@ -88,10 +91,7 @@ public final class P7_Dhruva_Krupa_ToolKit {
         }
     }
 
-    /**
-     * Helper method to draw Y axis scale for vertical alignment
-     * with 25 count granularity
-     */
+    /** Helper method to draw Y axis scale for vertical alignment with 25 count granularity */
     public void drawScale() {
         int height = pen.getPadPanel().getSize().height;
 
@@ -110,9 +110,9 @@ public final class P7_Dhruva_Krupa_ToolKit {
     /**
      * Helper method to apply color transformations to base color
      *
-     * @param color  Base color
+     * @param color Base color
      * @param factor Transformation factor for RGB
-     * @param alpha  Transformation factor for A
+     * @param alpha Transformation factor for A
      * @return Transformed color
      */
     public Color filteredColor(Color color, float factor, float alpha) {
@@ -123,7 +123,7 @@ public final class P7_Dhruva_Krupa_ToolKit {
     /**
      * Helper function to apply a transformation to RGBA
      *
-     * @param color  Base color
+     * @param color Base color
      * @param factor Transformation factor
      * @return Transformed color
      */
@@ -143,7 +143,7 @@ public final class P7_Dhruva_Krupa_ToolKit {
     /**
      * Use single pseudo random number generator
      *
-     * @return
+     * @return Returns pseudo random generator
      */
     public Random getRandom() {
         return random;
@@ -203,9 +203,7 @@ public final class P7_Dhruva_Krupa_ToolKit {
         move(point.x, point.y);
     }
 
-    /**
-     * Reset to defaults for pen and pad
-     */
+    /** Reset to defaults for pen and pad */
     public void reset() {
         pen.setColor(Color.BLUE);
         pen.setWidth(1);

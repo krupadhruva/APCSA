@@ -4,9 +4,7 @@ import java.awt.*;
 import java.util.PrimitiveIterator;
 import java.util.Random;
 
-/**
- * Draw a random collection of birds in a bounding box
- */
+/** Draw a random collection of birds in a bounding box */
 public class P7_Dhruva_Krupa_RandomFlock {
 
     /** Color of individual component of flock */
@@ -28,15 +26,21 @@ public class P7_Dhruva_Krupa_RandomFlock {
      * Random flock of birds
      *
      * @param toolKit Common drawing tools
-     * @param origin  Location of the bounding box for the flock
-     * @param radius  Determines the size of a bird
-     * @param width   Width of the bounding box
-     * @param height  Height of the bounding box
-     * @param count   Number of instances/components in the flock
-     * @param color   Color of the component
+     * @param origin Location of the bounding box for the flock
+     * @param radius Determines the size of a bird
+     * @param width Width of the bounding box
+     * @param height Height of the bounding box
+     * @param count Number of instances/components in the flock
+     * @param color Color of the component
      */
-    public P7_Dhruva_Krupa_RandomFlock(P7_Dhruva_Krupa_ToolKit toolKit, Point origin,
-                                       int radius, int width, int height, int count, Color color) {
+    public P7_Dhruva_Krupa_RandomFlock(
+            P7_Dhruva_Krupa_ToolKit toolKit,
+            Point origin,
+            int radius,
+            int width,
+            int height,
+            int count,
+            Color color) {
         this.toolKit = toolKit;
         this.origin = origin;
         this.width = width;
@@ -46,16 +50,20 @@ public class P7_Dhruva_Krupa_RandomFlock {
         this.color = color;
     }
 
+    /**
+     * Simple driver to test methods of the class
+     *
+     * @param args Command line arguments
+     */
     public static void main(String[] args) {
         P7_Dhruva_Krupa_ToolKit toolKit = new P7_Dhruva_Krupa_ToolKit(800, 600);
         P7_Dhruva_Krupa_RandomFlock flock =
-                new P7_Dhruva_Krupa_RandomFlock(toolKit, new Point(100, 100), 20, 300, 100, 20, Color.BLACK);
+                new P7_Dhruva_Krupa_RandomFlock(
+                        toolKit, new Point(100, 100), 20, 300, 100, 20, Color.BLACK);
         flock.draw();
     }
 
-    /**
-     * Draws a random flock of components with in a bounding box
-     */
+    /** Draws a random flock of components with in a bounding box */
     public void draw() {
         toolKit.reset();
 

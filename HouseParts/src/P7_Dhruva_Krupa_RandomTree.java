@@ -5,45 +5,52 @@ import java.util.PrimitiveIterator;
 import java.util.Random;
 
 /**
- * RandomTree draws a tree with a trunk and leaves using
- * coordinate system based on lower left corner as origin
+ * RandomTree draws a tree with a trunk and leaves using coordinate system based on lower left
+ * corner as origin
  *
- * Leaves are positioned randomly within a circular bounding box
- * The color of the leaves are random shades of the base color
+ * <p>Leaves are positioned randomly within a circular bounding box The color of the leaves are
+ * random shades of the base color
  */
 public class P7_Dhruva_Krupa_RandomTree {
 
     /** Height of the tree trunk */
-    final private int height;
+    private final int height;
     /** Base color of the leaf */
-    final private Color leafColor;
+    private final Color leafColor;
     /** Number of leaves */
-    final private int leaves;
+    private final int leaves;
     /** Location of the tree trunk */
     private final Point origin;
     /** Radius of bounding circle for random leaves */
-    final private int radius;
+    private final int radius;
     /** Common drawing tools */
-    final private P7_Dhruva_Krupa_ToolKit toolKit;
+    private final P7_Dhruva_Krupa_ToolKit toolKit;
     /** Tree trunk color */
-    final private Color trunkColor;
+    private final Color trunkColor;
     /** Width of the tree trunk */
-    final private int width;
+    private final int width;
 
     /**
      * Constructs a tree with random leaves in a give radius boundary
      *
-     * @param toolKit    Handle to drawing pen and common helper methods
-     * @param origin     Use local coordinate system (lower left corner is origin)
-     * @param width      Width of trunk
-     * @param height     Height of trunk
-     * @param radius     Boundary circle containing random leaves
-     * @param leaves     Number of leaves
+     * @param toolKit Handle to drawing pen and common helper methods
+     * @param origin Use local coordinate system (lower left corner is origin)
+     * @param width Width of trunk
+     * @param height Height of trunk
+     * @param radius Boundary circle containing random leaves
+     * @param leaves Number of leaves
      * @param trunkColor Trunk color
-     * @param leafColor  Leaf base color - actual leaves will be random shades of this color
+     * @param leafColor Leaf base color - actual leaves will be random shades of this color
      */
-    public P7_Dhruva_Krupa_RandomTree(P7_Dhruva_Krupa_ToolKit toolKit, Point origin, int width, int height,
-                                      int radius, int leaves, Color trunkColor, Color leafColor) {
+    public P7_Dhruva_Krupa_RandomTree(
+            P7_Dhruva_Krupa_ToolKit toolKit,
+            Point origin,
+            int width,
+            int height,
+            int radius,
+            int leaves,
+            Color trunkColor,
+            Color leafColor) {
         this.toolKit = toolKit;
         this.origin = origin;
 
@@ -61,6 +68,11 @@ public class P7_Dhruva_Krupa_RandomTree {
         this.leafColor = leafColor;
     }
 
+    /**
+     * Simple driver to test methods of the class
+     *
+     * @param args Command line arguments
+     */
     public static void main(String[] args) {
         P7_Dhruva_Krupa_ToolKit toolKit = new P7_Dhruva_Krupa_ToolKit(800, 600);
 
@@ -68,18 +80,18 @@ public class P7_Dhruva_Krupa_RandomTree {
         Color trunkColor = new Color(99, 62, 62);
 
         P7_Dhruva_Krupa_RandomTree tree1 =
-                new P7_Dhruva_Krupa_RandomTree(toolKit, location, 50, 200, 100, 45, trunkColor, Color.GREEN);
+                new P7_Dhruva_Krupa_RandomTree(
+                        toolKit, location, 50, 200, 100, 45, trunkColor, Color.GREEN);
         tree1.draw();
 
         location.translate(200, 50);
         P7_Dhruva_Krupa_RandomTree tree2 =
-                new P7_Dhruva_Krupa_RandomTree(toolKit, location, 50, 200, 100, 45, trunkColor, Color.GREEN);
+                new P7_Dhruva_Krupa_RandomTree(
+                        toolKit, location, 50, 200, 100, 45, trunkColor, Color.GREEN);
         tree2.draw();
     }
 
-    /**
-     * Draw tree with random collection of filled circles and ovals for leaves
-     */
+    /** Draw tree with random collection of filled circles and ovals for leaves */
     public void draw() {
         toolKit.reset();
 
@@ -111,14 +123,16 @@ public class P7_Dhruva_Krupa_RandomTree {
         Point leafOrig = new Point(origin.x + (width / 2), origin.y + height + radius);
         for (int count = 0; count < leaves / 2; ++count) {
             float shade = randShade.next().floatValue();
-            pen.setColor(new Color(rgba[0] * shade, rgba[1] * shade, rgba[2] * shade, rgba[3] * shade));
+            pen.setColor(
+                    new Color(rgba[0] * shade, rgba[1] * shade, rgba[2] * shade, rgba[3] * shade));
             toolKit.move(leafOrig.x + randOrigin.next(), leafOrig.y + randOrigin.next());
             pen.down();
             pen.fillCircle(randRadius.next());
             pen.up();
 
             shade = randShade.next().floatValue();
-            pen.setColor(new Color(rgba[0] * shade, rgba[1] * shade, rgba[2] * shade, rgba[3] * shade));
+            pen.setColor(
+                    new Color(rgba[0] * shade, rgba[1] * shade, rgba[2] * shade, rgba[3] * shade));
             toolKit.move(leafOrig.x + randOrigin.next(), leafOrig.y + randOrigin.next());
             pen.down();
             pen.fillOval(randRadius.next(), randRadius.next());
