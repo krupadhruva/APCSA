@@ -4,12 +4,26 @@ import java.awt.*;
 
 public class P7_Dhruva_Krupa_Sun {
 
+    /** Color of the sun */
     private final Color color;
+    /** Radius of the core circle */
     private final int coreRadius;
+    /** Location of the origin of the core */
     private final Point origin;
+    /** Radius of the longest ray of sun */
     private final int rayRadius;
+    /** Common drawing tools */
     private final P7_Dhruva_Krupa_ToolKit toolKit;
 
+    /**
+     * Draws Sun with alternating sized rays pointing radially
+     *
+     * @param toolKit    Common drawing tools
+     * @param origin     Location of the origin of the core
+     * @param coreRadius Radius of the core circle
+     * @param rayRadius  Radius of the longest ray of sun
+     * @param color      Color of the sun
+     */
     public P7_Dhruva_Krupa_Sun(P7_Dhruva_Krupa_ToolKit toolKit, Point origin,
                                int coreRadius, int rayRadius, Color color) {
         this.toolKit = toolKit;
@@ -25,6 +39,9 @@ public class P7_Dhruva_Krupa_Sun {
         sun.draw();
     }
 
+    /**
+     * Draw the sun with 24 rays of alternating lengths
+     */
     public void draw() {
         toolKit.reset();
 

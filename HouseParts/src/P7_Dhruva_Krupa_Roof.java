@@ -7,20 +7,26 @@ import java.awt.*;
  */
 public class P7_Dhruva_Krupa_Roof {
 
+    /** Roof color */
     final private Color color;
+    /** Height of the tapered roof */
     final private int height;
+    /** Location of the roof */
     final private Point origin;
+    /** Thickness of each layer in the tapering roof */
     final private int thickness;
+    /** Common drawing tools */
     final private P7_Dhruva_Krupa_ToolKit toolKit;
+    /** Width of the first layer of the tapering roof */
     final private int width;
 
     /**
-     * @param toolKit
-     * @param origin
-     * @param width
-     * @param height
-     * @param thickness
-     * @param color
+     * @param toolKit   Common drawing tools
+     * @param origin    Location of roof
+     * @param width     Width of the first layer of a tapering roof
+     * @param height    Height of the roof
+     * @param thickness Thickness of layer of the roof
+     * @param color     Color of the roof
      */
     public P7_Dhruva_Krupa_Roof(P7_Dhruva_Krupa_ToolKit toolKit, Point origin, int width, int height, int thickness,
                                 Color color) {
@@ -43,6 +49,9 @@ public class P7_Dhruva_Krupa_Roof {
         roof.draw();
     }
 
+    /**
+     * Draws a tapering roof
+     */
     public void draw() {
         toolKit.reset();
 

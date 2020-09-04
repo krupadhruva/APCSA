@@ -10,25 +10,33 @@ import java.util.Random;
  */
 public class P7_Dhruva_Krupa_Wall {
 
+    /** Pen width to draw brick outlines */
     static private final int outlineWidth = 2;
+    /** Brick height */
     private final int brickHeight;
+    /** Width of the brick */
     private final int brickWidth;
+    /** Brick color */
     private final Color color;
+    /** Height of the wall */
     private final int height;
+    /** Location of the wall */
     private final Point origin;
+    /** Common drawing tools */
     private final P7_Dhruva_Krupa_ToolKit toolKit;
+    /** Width of the wall */
     private final int width;
 
     /**
      * Construct a wall with overlapping brick work
      *
-     * @param toolKit
-     * @param origin
-     * @param width
-     * @param height
-     * @param brickWidth
-     * @param brickHeight
-     * @param color
+     * @param toolKit     Common drawing tools
+     * @param origin      Location of the wall
+     * @param width       Width of the wall
+     * @param height      Height of the wall
+     * @param brickWidth  Width of the brick
+     * @param brickHeight Brick height
+     * @param color       Brick color
      */
     public P7_Dhruva_Krupa_Wall(P7_Dhruva_Krupa_ToolKit toolKit, Point origin, int width, int height,
                                 int brickWidth, int brickHeight, Color color) {
@@ -54,6 +62,9 @@ public class P7_Dhruva_Krupa_Wall {
         wall.draw();
     }
 
+    /**
+     * Draws a wall with random placement of bricks with outlines
+     */
     public void draw() {
         toolKit.move(origin);
 

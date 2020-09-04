@@ -8,11 +8,17 @@ import java.awt.*;
  */
 public class P7_Dhruva_Krupa_Door {
 
+    /** Color of the door */
     final private Color color;
+    /** Door height */
     final private int height;
+    /** Color of house interior to show in partially open door */
     final private Color inside;
+    /** Position of door */
     final private Point origin;
+    /** Handle to common drawing tools */
     final private P7_Dhruva_Krupa_ToolKit toolKit;
+    /** Door width */
     final private int width;
 
     /**
@@ -57,7 +63,14 @@ public class P7_Dhruva_Krupa_Door {
         door.draw();
     }
 
-    void draw() {
+    /**
+     * Method to actually draw the door based based on attributes
+     *
+     * Supports drawing partially open door. Since the shape of the
+     * partially open door is not a rectangle, we use multiple lines
+     * to fill the polygon.
+     */
+    public void draw() {
         toolKit.reset();
 
         DrawingTool pen = toolKit.getPen();

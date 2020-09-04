@@ -9,24 +9,31 @@ import java.util.Random;
  */
 public class P7_Dhruva_Krupa_RandomFlock {
 
+    /** Color of individual component of flock */
     private final Color color;
+    /** Number of instances in a flock */
     private final int count;
+    /** Height of the bounding box */
     private final int height;
+    /** Location of bounding box for flock */
     private final Point origin;
+    /** Radius of the individual component */
     private final int radius;
+    /** Common drawing tools */
     private final P7_Dhruva_Krupa_ToolKit toolKit;
+    /** Width of the bounding box for flock */
     private final int width;
 
     /**
      * Random flock of birds
      *
-     * @param toolKit
-     * @param origin
+     * @param toolKit Common drawing tools
+     * @param origin  Location of the bounding box for the flock
      * @param radius  Determines the size of a bird
-     * @param width
-     * @param height
-     * @param count
-     * @param color
+     * @param width   Width of the bounding box
+     * @param height  Height of the bounding box
+     * @param count   Number of instances/components in the flock
+     * @param color   Color of the component
      */
     public P7_Dhruva_Krupa_RandomFlock(P7_Dhruva_Krupa_ToolKit toolKit, Point origin,
                                        int radius, int width, int height, int count, Color color) {
@@ -46,12 +53,16 @@ public class P7_Dhruva_Krupa_RandomFlock {
         flock.draw();
     }
 
+    /**
+     * Draws a random flock of components with in a bounding box
+     */
     public void draw() {
         toolKit.reset();
 
         DrawingTool pen = toolKit.getPen();
         Random rand = toolKit.getRandom();
 
+        // Random position for the flock with in the bounding box
         PrimitiveIterator.OfInt xVals = rand.ints(origin.x, origin.x + width).iterator();
         PrimitiveIterator.OfInt yVals = rand.ints(origin.y, origin.y + height).iterator();
 

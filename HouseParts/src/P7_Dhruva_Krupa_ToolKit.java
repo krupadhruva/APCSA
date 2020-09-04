@@ -16,11 +16,11 @@ import java.util.Random;
  */
 public final class P7_Dhruva_Krupa_ToolKit {
 
-    /**
-     * Our view of origin - Lower left corner of the sheet
-     */
+    /** Our view of origin - Lower left corner of the sheet */
     final private Point origin;
+    /** Pen used for drawing objects */
     final private DrawingTool pen;
+    /** Common random number generator across shapes */
     final private Random random;
 
     /**

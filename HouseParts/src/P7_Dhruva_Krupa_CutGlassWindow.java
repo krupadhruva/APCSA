@@ -10,22 +10,28 @@ import java.util.Random;
  */
 public class P7_Dhruva_Krupa_CutGlassWindow {
 
+    /** Color palette for glass panels: Array of colors */
     private final Color[] colors;
+    /** Window height */
     private final int height;
+    /** Color of house interiors as window background */
     private final Color inside;
+    /** Position of window left lower corner */
     private final Point origin;
+    /** Tool kit with drawing tools */
     private final P7_Dhruva_Krupa_ToolKit toolKit;
+    /** Window width */
     private final int width;
 
     /**
      * Draws a random chequered pattern window
      *
-     * @param toolKit
-     * @param origin
-     * @param width
-     * @param height
+     * @param toolKit Common drawing tools
+     * @param origin  Location of the window
+     * @param width   Width of the window
+     * @param height  Height of the window
      * @param colors  Array of colors to randomly pick from. Repeating colors will increase probability of that color
-     * @param inside  Inside color
+     * @param inside  Interior color to draw the background of the window
      */
     public P7_Dhruva_Krupa_CutGlassWindow(P7_Dhruva_Krupa_ToolKit toolKit, Point origin, int width, int height,
                                           Color[] colors, Color inside) {
@@ -46,6 +52,14 @@ public class P7_Dhruva_Krupa_CutGlassWindow {
         window.draw();
     }
 
+    /**
+     * Method to actually draw window based based on attributes
+     *
+     * Cut glass is basically a random color picked from the array of
+     * colors with modified alpha to increase transparency. Outline of
+     * the individual panel is drawn with the random color picked to create
+     * a slight border for each piece.
+     */
     public void draw() {
         toolKit.reset();
 
