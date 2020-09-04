@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# Based on: https://github.com/google/google-java-format
+# Download the jar file with all deps
+
+set -e
+
+CWD=$(pwd)
+
+VER=1.9
+JAR=google-java-format-${VER}-all-deps.jar
+
+if [ ! -f ${HOME}/bin/jars/${JAR} ]; then
+    mkdir -p ${HOME}/bin/jars
+    cd ${HOME}/bin/jars
+    curl -sSLO https://github.com/google/google-java-format/releases/download/google-java-format-${VER}/${JAR}
+    cd ${CWD}
+fi
+
+export JENV_VERSION=11
+java -jar ${HOME}/bin/jars/${JAR} $*
