@@ -2,6 +2,8 @@ import gpdraw.DrawingTool;
 import gpdraw.SketchPad;
 
 import java.awt.*;
+import java.util.PrimitiveIterator;
+import java.util.Random;
 
 /**
  * Driver class to assemble the various house parts and test the final view The intent is to test
@@ -100,6 +102,29 @@ public final class P7_Dhruva_Krupa_HouseDriver {
                 new P7_Dhruva_Krupa_RandomTree(
                         toolKit, new Point(750, 90), 20, 100, 100, 50, trunkColor, leafColor);
         treeS.draw();
+
+        Random rand = toolKit.getRandom();
+        PrimitiveIterator.OfInt randInnerRad = rand.ints(3, 6).iterator();
+        PrimitiveIterator.OfInt xVals = rand.ints(500, 800).iterator();
+        PrimitiveIterator.OfInt yVals = rand.ints(10, 100).iterator();
+        for (int count = 0; count < 15; ++count) {
+            int innerRadius = randInnerRad.nextInt();
+            P7_Dhruva_Krupa_Flower flower =
+                    new P7_Dhruva_Krupa_Flower(
+                            innerRadius,
+                            innerRadius * 3,
+                            new Point(xVals.nextInt(), yVals.nextInt()),
+                            Color.ORANGE,
+                            Color.RED,
+                            5,
+                            toolKit);
+            flower.draw();
+        }
+
+        P7_Dhruva_Krupa_Fence fence =
+                new P7_Dhruva_Krupa_Fence(
+                        toolKit, new Point(40, 50), 12, 60, 20, 7, Color.WHITE, 14);
+        fence.draw();
 
         // For debugging: Draw a simple scale
         // toolKit.drawScale();

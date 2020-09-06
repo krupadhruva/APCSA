@@ -71,6 +71,7 @@ public class P7_Dhruva_Krupa_Wall {
         wall.draw();
     }
 
+    // Instead of drawing rectangles for the bricks, you can draw random lines
     /** Draws a wall with random placement of bricks with outlines */
     public void draw() {
         toolKit.move(origin);

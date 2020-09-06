@@ -211,4 +211,8 @@ public final class P7_Dhruva_Krupa_ToolKit {
         pen.up();
         move(0, 0);
     }
+
+    public static P7_Dhruva_Krupa_ToolKit createToolKit() {
+        return new P7_Dhruva_Krupa_ToolKit(800, 600);
+    }
 }
