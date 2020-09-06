@@ -68,8 +68,8 @@ public final class P7_Dhruva_Krupa_HouseDriver {
         roof.draw();
 
         // Window
-        P7_Dhruva_Krupa_CutGlassWindow window =
-                new P7_Dhruva_Krupa_CutGlassWindow(
+        P7_Dhruva_Krupa_StainedGlassWindow window =
+                new P7_Dhruva_Krupa_StainedGlassWindow(
                         toolKit, new Point(100, 100), 120, 80, windowColors, insideColor);
         window.draw();
 

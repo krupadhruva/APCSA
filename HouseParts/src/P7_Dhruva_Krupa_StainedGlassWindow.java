@@ -8,7 +8,7 @@ import java.util.Random;
  * Draws a window with random colors from input with cut glass like appearance Hard coded to draw 5
  * rows of cut glass appearance
  */
-public class P7_Dhruva_Krupa_CutGlassWindow {
+public class P7_Dhruva_Krupa_StainedGlassWindow {
 
     /** Color palette for glass panels: Array of colors */
     private final Color[] colors;
@@ -34,7 +34,7 @@ public class P7_Dhruva_Krupa_CutGlassWindow {
      *     probability of that color
      * @param inside Interior color to draw the background of the window
      */
-    public P7_Dhruva_Krupa_CutGlassWindow(
+    public P7_Dhruva_Krupa_StainedGlassWindow(
             P7_Dhruva_Krupa_ToolKit toolKit,
             Point origin,
             int width,
@@ -56,8 +56,8 @@ public class P7_Dhruva_Krupa_CutGlassWindow {
      */
     public static void main(String[] args) {
         P7_Dhruva_Krupa_ToolKit toolKit = new P7_Dhruva_Krupa_ToolKit(800, 600);
-        P7_Dhruva_Krupa_CutGlassWindow window =
-                new P7_Dhruva_Krupa_CutGlassWindow(
+        P7_Dhruva_Krupa_StainedGlassWindow window =
+                new P7_Dhruva_Krupa_StainedGlassWindow(
                         toolKit,
                         new Point(100, 100),
                         100,
