@@ -7,15 +7,15 @@ import java.util.Random;
 /**
  * Class providing basic drawing tools like pen
  *
- * <p>Since we use a different coordinate system with lower left corner treated as (0,0), we provide
- * helper methods to transform from gpdraw coordinate system to our system
+ * <p>Since we support a different coordinate system treated as (0,0), we provide helper methods to
+ * transform from gpdraw coordinate system to our system
  *
  * <p>Took help to implement the following: Tool kit provides a single instance of random number
  * generator with support for custom seed value to ensure reproducibility across runs
  */
 public final class P7_Dhruva_Krupa_ToolKit {
 
-    /** Our view of origin - Lower left corner of the sheet */
+    /** Our view of origin */
     private final Point origin;
     /** Pen used for drawing objects */
     private final DrawingTool pen;
@@ -23,8 +23,7 @@ public final class P7_Dhruva_Krupa_ToolKit {
     private final Random random;
 
     /**
-     * Construct a toolkit with SketchPad and a pen Uses lower left corner as the origin instead of
-     * sheet centre to make it easy to layout objects without having to deal with negative numbers.
+     * Construct a toolkit with SketchPad and a pen
      *
      * @param width Width of the drawing area
      * @param height Height of the drawing area
@@ -50,8 +49,7 @@ public final class P7_Dhruva_Krupa_ToolKit {
      * @param seed Random number generator seed. Can be null.
      */
     public P7_Dhruva_Krupa_ToolKit(DrawingTool pen, Long seed) {
-        Dimension dim = pen.getPadPanel().getSize();
-        this.origin = new Point(-dim.width / 2, -dim.height / 2);
+        this.origin = new Point(0, 0);
         this.pen = pen;
 
         if (seed == null) {
@@ -64,6 +62,15 @@ public final class P7_Dhruva_Krupa_ToolKit {
     }
 
     /**
+     * Helper method to re-position the origin
+     *
+     * @param point Desired origin with respect to which all objects are positioned and drawn
+     */
+    public void setOrigin(Point point) {
+        this.origin.setLocation(point);
+    }
+
+    /**
      * Simple driver to test methods of the class
      *
      * @param args Command line arguments
@@ -71,6 +78,8 @@ public final class P7_Dhruva_Krupa_ToolKit {
     public static void main(String[] args) {
         P7_Dhruva_Krupa_ToolKit toolKit = new P7_Dhruva_Krupa_ToolKit(800, 600);
         DrawingTool pen = toolKit.getPen();
+        Dimension dim = pen.getPadPanel().getSize();
+        toolKit.setOrigin(new Point(-dim.width / 2, -dim.height / 2));
         pen.down();
 
         // Test drawing a circle at center with our lower left corner based coordinate system
@@ -89,6 +98,9 @@ public final class P7_Dhruva_Krupa_ToolKit {
         if (!localPos.equals(gpPos)) {
             throw new AssertionError("Translating local to gpdraw coordinate system failed");
         }
+
+        // Test the scale
+        toolKit.drawScale();
     }
 
     /** Helper method to draw Y axis scale for vertical alignment with 25 count granularity */
@@ -163,20 +175,7 @@ public final class P7_Dhruva_Krupa_ToolKit {
     }
 
     /**
-     * Returns the coordinates with respect to gpdraw world
-     *
-     * @param x X coordinate with respect to lower left corner
-     * @param y Y coordinate with respect to lower left corner
-     * @return Translated point in gpdraw system
-     */
-    public Point localToGpdraw(int x, int y) {
-        Point pt = origin.getLocation();
-        pt.translate(x, y);
-        return pt;
-    }
-
-    /**
-     * Position pen by translating lower left corner based origin
+     * Position pen by translating with respect to origin
      *
      * @param x X coordinate
      * @param y Y coordinate
@@ -195,9 +194,9 @@ public final class P7_Dhruva_Krupa_ToolKit {
     }
 
     /**
-     * Position pen by translating lower left corner based origin
+     * Position pen by translating with respect to origin
      *
-     * @param point Position relative to lower left corner
+     * @param point Position relative to origin
      */
     public void move(Point point) {
         move(point.x, point.y);

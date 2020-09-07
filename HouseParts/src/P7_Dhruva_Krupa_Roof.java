@@ -54,7 +54,7 @@ public class P7_Dhruva_Krupa_Roof {
     public static void main(String[] args) {
         P7_Dhruva_Krupa_ToolKit toolKit = new P7_Dhruva_Krupa_ToolKit(800, 600);
         P7_Dhruva_Krupa_Roof roof =
-                new P7_Dhruva_Krupa_Roof(toolKit, new Point(100, 100), 400, 200, 20, Color.RED);
+                new P7_Dhruva_Krupa_Roof(toolKit, new Point(-200, 0), 400, 200, 20, Color.RED);
         roof.draw();
     }
 

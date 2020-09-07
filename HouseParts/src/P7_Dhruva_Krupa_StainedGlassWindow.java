@@ -59,7 +59,7 @@ public class P7_Dhruva_Krupa_StainedGlassWindow {
         P7_Dhruva_Krupa_StainedGlassWindow window =
                 new P7_Dhruva_Krupa_StainedGlassWindow(
                         toolKit,
-                        new Point(100, 100),
+                        new Point(-50, -100),
                         100,
                         200,
                         new Color[] {

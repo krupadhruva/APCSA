@@ -4,7 +4,11 @@ import java.awt.*;
 import java.util.PrimitiveIterator;
 import java.util.Random;
 
-/** Draw a random collection of birds in a bounding box */
+/**
+ * Draw a random collection of birds in a bounding box
+ *
+ * <p>The randomization could be external to this class
+ */
 public class P7_Dhruva_Krupa_RandomFlock {
 
     /** Color of individual component of flock */
@@ -59,7 +63,7 @@ public class P7_Dhruva_Krupa_RandomFlock {
         P7_Dhruva_Krupa_ToolKit toolKit = new P7_Dhruva_Krupa_ToolKit(800, 600);
         P7_Dhruva_Krupa_RandomFlock flock =
                 new P7_Dhruva_Krupa_RandomFlock(
-                        toolKit, new Point(100, 100), 20, 300, 100, 20, Color.BLACK);
+                        toolKit, new Point(-250, -50), 20, 300, 100, 20, Color.BLACK);
         flock.draw();
     }
 

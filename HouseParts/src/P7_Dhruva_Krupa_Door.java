@@ -70,12 +70,12 @@ public class P7_Dhruva_Krupa_Door {
         P7_Dhruva_Krupa_ToolKit toolKit = new P7_Dhruva_Krupa_ToolKit(800, 600);
 
         P7_Dhruva_Krupa_Door closeDoor =
-                new P7_Dhruva_Krupa_Door(toolKit, new Point(300, 50), 150, 300, Color.BLACK);
+                new P7_Dhruva_Krupa_Door(toolKit, new Point(-250, -100), 150, 300, Color.BLACK);
         closeDoor.draw();
 
         P7_Dhruva_Krupa_Door openDoor =
                 new P7_Dhruva_Krupa_Door(
-                        toolKit, new Point(100, 50), 150, 300, Color.BLACK, Color.LIGHT_GRAY);
+                        toolKit, new Point(100, -100), 150, 300, Color.BLACK, Color.LIGHT_GRAY);
         openDoor.draw();
     }
 

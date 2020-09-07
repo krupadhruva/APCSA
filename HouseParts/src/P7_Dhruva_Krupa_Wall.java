@@ -4,7 +4,11 @@ import java.awt.*;
 import java.util.PrimitiveIterator;
 import java.util.Random;
 
-/** Draw wall with multiple layers of overlapping brick work Attempting to show stone cladding */
+/**
+ * Draw wall with multiple layers of overlapping brick work Attempting to show stone cladding
+ *
+ * <p>Note: The height of the brick is adjusted to exactly fill the height of the wall
+ */
 public class P7_Dhruva_Krupa_Wall {
 
     /** Pen width to draw brick outlines */
@@ -67,7 +71,8 @@ public class P7_Dhruva_Krupa_Wall {
     public static void main(String[] args) {
         P7_Dhruva_Krupa_ToolKit toolKit = new P7_Dhruva_Krupa_ToolKit(800, 600);
         P7_Dhruva_Krupa_Wall wall =
-                new P7_Dhruva_Krupa_Wall(toolKit, new Point(100, 100), 300, 200, 50, 20, Color.RED);
+                new P7_Dhruva_Krupa_Wall(
+                        toolKit, new Point(-150, -100), 300, 200, 50, 20, Color.RED);
         wall.draw();
     }
 

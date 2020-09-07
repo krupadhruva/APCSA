@@ -5,8 +5,7 @@ import java.util.PrimitiveIterator;
 import java.util.Random;
 
 /**
- * RandomTree draws a tree with a trunk and leaves using coordinate system based on lower left
- * corner as origin
+ * RandomTree draws a tree with a trunk and leaves using tool kit coordinate system based
  *
  * <p>Leaves are positioned randomly within a circular bounding box The color of the leaves are
  * random shades of the base color
@@ -76,7 +75,7 @@ public class P7_Dhruva_Krupa_RandomTree {
     public static void main(String[] args) {
         P7_Dhruva_Krupa_ToolKit toolKit = new P7_Dhruva_Krupa_ToolKit(800, 600);
 
-        Point location = new Point(100, 100);
+        Point location = new Point(-250, -250);
         Color trunkColor = new Color(99, 62, 62);
 
         P7_Dhruva_Krupa_RandomTree tree1 =

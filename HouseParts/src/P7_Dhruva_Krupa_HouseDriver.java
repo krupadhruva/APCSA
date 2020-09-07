@@ -22,6 +22,10 @@ public final class P7_Dhruva_Krupa_HouseDriver {
                 new P7_Dhruva_Krupa_ToolKit(new SketchPad(800, 600, 5L), 100L);
         DrawingTool pen = toolKit.getPen();
 
+        // Set origin to lower left corner
+        Dimension dim = pen.getPadPanel().getSize();
+        toolKit.setOrigin(new Point(-dim.width / 2, -dim.height / 2));
+
         Color skyColor = new Color(140, 189, 237);
         Color grassColor = new Color(59, 150, 47);
 
@@ -103,6 +107,8 @@ public final class P7_Dhruva_Krupa_HouseDriver {
                         toolKit, new Point(750, 90), 20, 100, 100, 50, trunkColor, leafColor);
         treeS.draw();
 
+        // Draw random flowers with in a bounding rectangle. This is very similar to flock of
+        // birds and grass
         Random rand = toolKit.getRandom();
         PrimitiveIterator.OfInt randInnerRad = rand.ints(3, 6).iterator();
         PrimitiveIterator.OfInt xVals = rand.ints(500, 800).iterator();
@@ -111,13 +117,13 @@ public final class P7_Dhruva_Krupa_HouseDriver {
             int innerRadius = randInnerRad.nextInt();
             P7_Dhruva_Krupa_Flower flower =
                     new P7_Dhruva_Krupa_Flower(
+                            toolKit,
                             innerRadius,
                             innerRadius * 3,
                             new Point(xVals.nextInt(), yVals.nextInt()),
                             Color.ORANGE,
                             Color.RED,
-                            5,
-                            toolKit);
+                            5);
             flower.draw();
         }
 

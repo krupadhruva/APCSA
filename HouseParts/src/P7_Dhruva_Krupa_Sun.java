@@ -50,7 +50,7 @@ public class P7_Dhruva_Krupa_Sun {
     public static void main(String[] args) {
         P7_Dhruva_Krupa_ToolKit toolKit = new P7_Dhruva_Krupa_ToolKit(800, 600);
         P7_Dhruva_Krupa_Sun sun =
-                new P7_Dhruva_Krupa_Sun(toolKit, new Point(500, 200), 50, 80, Color.ORANGE);
+                new P7_Dhruva_Krupa_Sun(toolKit, new Point(0, 0), 50, 80, Color.ORANGE);
         sun.draw();
     }
 
