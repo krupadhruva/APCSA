@@ -3,7 +3,7 @@ import gpdraw.DrawingTool;
 import java.awt.*;
 
 /**
- * Class to draw the sky and grass background This should be drawn before any other object If not,
+ * Class to draw the sky and grass background. This should be drawn before any other object. If not,
  * this will mask the other objects
  */
 public class P7_Dhruva_Krupa_Background {

@@ -7,7 +7,7 @@ import java.util.Random;
 /**
  * RandomTree draws a tree with a trunk and leaves using tool kit coordinate system based
  *
- * <p>Leaves are positioned randomly within a circular bounding box The color of the leaves are
+ * <p>Leaves are positioned randomly within a circular bounding box. The color of the leaves are
  * random shades of the base color
  */
 public class P7_Dhruva_Krupa_RandomTree {

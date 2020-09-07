@@ -5,11 +5,9 @@ import java.awt.Point;
 
 /**
  * Draws a simple single flower comprising of circles with an inner core and outer circular bounding
- * box for petals
+ * box for petals.
  *
  * <p>The flowers can be placed randomly within a bounding box for better layout
- *
- * @see P7_Dhruva_Krupa_HouseDriver for usage
  */
 public class P7_Dhruva_Krupa_Flower {
 

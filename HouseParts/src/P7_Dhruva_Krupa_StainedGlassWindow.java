@@ -5,7 +5,7 @@ import java.util.PrimitiveIterator;
 import java.util.Random;
 
 /**
- * Draws a window with random colors from input with cut glass like appearance Hard coded to draw 5
+ * Draws a window with random colors from input with cut glass like appearance. Hard coded to draw 5
  * rows of cut glass appearance
  */
 public class P7_Dhruva_Krupa_StainedGlassWindow {

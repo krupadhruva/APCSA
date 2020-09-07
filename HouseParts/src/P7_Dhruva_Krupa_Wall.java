@@ -5,7 +5,7 @@ import java.util.PrimitiveIterator;
 import java.util.Random;
 
 /**
- * Draw wall with multiple layers of overlapping brick work Attempting to show stone cladding
+ * Draw wall with multiple layers of overlapping brick work. Attempting to show stone cladding
  *
  * <p>Note: The height of the brick is adjusted to exactly fill the height of the wall
  */

@@ -3,7 +3,7 @@ import gpdraw.DrawingTool;
 import java.awt.*;
 
 /**
- * Draws a door with 2 halves. Optionally draws a partially open door The opening is hardcoded for
+ * Draws a door with 2 halves. Optionally draws a partially open door. The opening is hardcoded for
  * simplicity
  */
 public class P7_Dhruva_Krupa_Door {

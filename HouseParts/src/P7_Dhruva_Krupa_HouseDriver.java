@@ -6,7 +6,7 @@ import java.util.PrimitiveIterator;
 import java.util.Random;
 
 /**
- * Driver class to assemble the various house parts and test the final view The intent is to test
+ * Driver class to assemble the various house parts and test the final view. The intent is to test
  * the positioning of different parts with respect to each other.
  */
 public final class P7_Dhruva_Krupa_HouseDriver {
