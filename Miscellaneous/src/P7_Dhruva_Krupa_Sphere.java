@@ -33,11 +33,7 @@ public class P7_Dhruva_Krupa_Sphere {
      * @param color Color of sphere
      */
     public P7_Dhruva_Krupa_Sphere(DrawingTool pen, Point origin, int radius, Color color) {
-        this.pen = pen;
-        this.origin = origin;
-        this.radius = radius;
-        this.color = color;
-        this.numberOfFrames = 0;
+        this(pen, origin, radius, color, 0);
     }
 
     /**
@@ -117,8 +113,8 @@ public class P7_Dhruva_Krupa_Sphere {
                 new P7_Dhruva_Krupa_Sphere(pen, new Point(-200, 0), 100, color, 30);
         wire.draw();
 
-        P7_Dhruva_Krupa_Sphere sphere =
+        P7_Dhruva_Krupa_Sphere solid =
                 new P7_Dhruva_Krupa_Sphere(pen, new Point(200, 0), 100, color);
-        sphere.draw();
+        solid.draw();
     }
 }
