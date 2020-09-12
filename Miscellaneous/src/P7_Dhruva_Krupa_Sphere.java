@@ -1,7 +1,23 @@
 import gpdraw.DrawingTool;
 import gpdraw.SketchPad;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Point;
+
+/*
+ * Name: Krupa Dhruva
+ * Date: September 11, 2020
+ * Period: 7
+ * Time Taken: About 4 hours
+ *
+ * Lab Reflection:
+ * I learned one way to avoid code duplication by reusing constructors.
+ * Overall, I enjoyed exploring the different ways to draw a sphere but the most challenging
+ * part that I did not figure out yet is how to evenly shade the filled in sphere if the
+ * light source is not directly hitting the center of the sphere. I am really proud of the wired
+ * sphere where I used multiple ovals to draw the wired frames. I also proud of using multiple circles
+ * with decreasing radius to show how the gradients are smoothly transitioning.
+ */
 
 /**
  * Class implementing sphere appearing like wireframe or solid.
@@ -55,6 +71,25 @@ public class P7_Dhruva_Krupa_Sphere {
     }
 
     /**
+     * Simple driver to test the sphere
+     *
+     * @param args Array of strings - command line arguments
+     */
+    public static void main(String[] args) {
+        SketchPad pad = new SketchPad(800, 600, 5L);
+        DrawingTool pen = new DrawingTool(pad);
+        Color color = Color.BLACK;
+
+        P7_Dhruva_Krupa_Sphere wire =
+                new P7_Dhruva_Krupa_Sphere(pen, new Point(-200, 0), 100, color, 30);
+        wire.draw();
+
+        P7_Dhruva_Krupa_Sphere solid =
+                new P7_Dhruva_Krupa_Sphere(pen, new Point(200, 0), 100, color);
+        solid.draw();
+    }
+
+    /**
      * Implements 2 versions of drawing a sphere based on constructor used to instantiate an object
      *
      * <p>Wireframe: Draws a wireframe model of a sphere built with perpendicular intersecting ovals
@@ -97,24 +132,5 @@ public class P7_Dhruva_Krupa_Sphere {
                 currentRadius -= ((double) radius / chunks);
             }
         }
-    }
-
-    /**
-     * Simple driver to test the sphere
-     *
-     * @param args Array of strings - command line arguments
-     */
-    public static void main(String[] args) {
-        SketchPad pad = new SketchPad(800, 600, 5L);
-        DrawingTool pen = new DrawingTool(pad);
-        Color color = Color.BLACK;
-
-        P7_Dhruva_Krupa_Sphere wire =
-                new P7_Dhruva_Krupa_Sphere(pen, new Point(-200, 0), 100, color, 30);
-        wire.draw();
-
-        P7_Dhruva_Krupa_Sphere solid =
-                new P7_Dhruva_Krupa_Sphere(pen, new Point(200, 0), 100, color);
-        solid.draw();
     }
 }
