@@ -33,6 +33,8 @@ public class P7_Dhruva_Krupa_Sphere {
     private final DrawingTool pen;
     /** Origin of the sphere */
     private final Point origin;
+    /** View point */
+    private final Point viewPoint;
     /** Sphere radius */
     private final int radius;
     /** Sphere color */
@@ -45,11 +47,18 @@ public class P7_Dhruva_Krupa_Sphere {
      *
      * @param pen Instance of DrawingTool
      * @param origin Sphere origin/location
+     * @param viewPoint Point of view or focus of light source
      * @param radius Radius of sphere
      * @param color Color of sphere
      */
-    public P7_Dhruva_Krupa_Sphere(DrawingTool pen, Point origin, int radius, Color color) {
+    public P7_Dhruva_Krupa_Sphere(
+            DrawingTool pen, Point origin, Point viewPoint, int radius, Color color) {
         this(pen, origin, radius, color, 0);
+
+        // Ensure view point in within the sphere
+        if (origin.distance(viewPoint) <= (double) radius) {
+            this.viewPoint.setLocation(viewPoint);
+        }
     }
 
     /**
@@ -65,6 +74,7 @@ public class P7_Dhruva_Krupa_Sphere {
             DrawingTool pen, Point origin, int radius, Color color, int numberOfFrames) {
         this.pen = pen;
         this.origin = origin;
+        this.viewPoint = origin.getLocation();
         this.radius = radius;
         this.color = color;
         this.numberOfFrames = numberOfFrames;
@@ -84,8 +94,10 @@ public class P7_Dhruva_Krupa_Sphere {
                 new P7_Dhruva_Krupa_Sphere(pen, new Point(-200, 0), 100, color, 30);
         wire.draw();
 
+        Point origin = new Point(200, 0);
+        Point viewPoint = new Point(150, 50);
         P7_Dhruva_Krupa_Sphere solid =
-                new P7_Dhruva_Krupa_Sphere(pen, new Point(200, 0), 100, color);
+                new P7_Dhruva_Krupa_Sphere(pen, origin, viewPoint, 100, color);
         solid.draw();
     }
 
@@ -118,9 +130,12 @@ public class P7_Dhruva_Krupa_Sphere {
             float[] rgba = color.getRGBComponents(null);
 
             // Draw circles from darker outer to lighter inside
-            double currentRadius = radius;
-
             int chunks = Math.max((int) (radius), 200);
+            double viewOffset = origin.distance(viewPoint);
+
+            double currentRadius = radius;
+            double xDelta = (viewPoint.getX() - origin.getX()) / chunks;
+            double yDelta = (viewPoint.getY() - origin.getY()) / chunks;
             for (int count = 0; count < chunks; ++count) {
                 pen.setColor(
                         new Color(
@@ -130,6 +145,13 @@ public class P7_Dhruva_Krupa_Sphere {
                                 rgba[3]));
                 pen.fillCircle(currentRadius);
                 currentRadius -= ((double) radius / chunks);
+
+                // Move origin towards view point at same rate as reducing radius
+                if (viewOffset > 0.0) {
+                    pen.up();
+                    pen.move(pen.getXPos() + xDelta, pen.getYPos() + yDelta);
+                    pen.down();
+                }
             }
         }
     }
