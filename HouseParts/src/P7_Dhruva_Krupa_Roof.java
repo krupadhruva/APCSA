@@ -46,6 +46,11 @@ public class P7_Dhruva_Krupa_Roof {
         this.color = color;
     }
 
+    public P7_Dhruva_Krupa_Roof(
+            DrawingTool pen, Point origin, int width, int height, int thickness, Color color) {
+        this(new P7_Dhruva_Krupa_ToolKit(pen), origin, width, height, thickness, color);
+    }
+
     /**
      * Simple driver to test methods of the class
      *

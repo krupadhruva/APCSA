@@ -67,6 +67,26 @@ public class P7_Dhruva_Krupa_RandomTree {
         this.leafColor = leafColor;
     }
 
+    public P7_Dhruva_Krupa_RandomTree(
+            DrawingTool pen,
+            Point origin,
+            int width,
+            int height,
+            int radius,
+            int leaves,
+            Color trunkColor,
+            Color leafColor) {
+        this(
+                new P7_Dhruva_Krupa_ToolKit(pen),
+                origin,
+                width,
+                height,
+                radius,
+                leaves,
+                trunkColor,
+                leafColor);
+    }
+
     /**
      * Simple driver to test methods of the class
      *

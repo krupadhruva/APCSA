@@ -54,6 +54,24 @@ public class P7_Dhruva_Krupa_Flower {
         this.toolKit = toolKit;
     }
 
+    public P7_Dhruva_Krupa_Flower(
+            DrawingTool pen,
+            int innerRadius,
+            int outerRadius,
+            Point origin,
+            Color innerColor,
+            Color petalColor,
+            int petalCount) {
+        this(
+                new P7_Dhruva_Krupa_ToolKit(pen),
+                innerRadius,
+                outerRadius,
+                origin,
+                innerColor,
+                petalColor,
+                petalCount);
+    }
+
     /** Draws the flower based on inputs in object */
     public void draw() {
         DrawingTool pen = toolKit.getPen();

@@ -33,6 +33,11 @@ public class P7_Dhruva_Krupa_Background {
         this.toolKit = toolKit;
     }
 
+    public P7_Dhruva_Krupa_Background(
+            DrawingTool pen, int grassHeight, Color skyColor, Color grassColor) {
+        this(new P7_Dhruva_Krupa_ToolKit(pen), grassHeight, skyColor, grassColor);
+    }
+
     /** Draws sky and grass background */
     public void draw() {
         DrawingTool pen = toolKit.getPen();

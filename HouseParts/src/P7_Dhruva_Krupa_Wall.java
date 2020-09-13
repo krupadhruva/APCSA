@@ -13,6 +13,7 @@ public class P7_Dhruva_Krupa_Wall {
 
     /** Pen width to draw brick outlines */
     private static final int outlineWidth = 2;
+
     /** Brick height */
     private final int brickHeight;
     /** Width of the brick */
@@ -61,6 +62,24 @@ public class P7_Dhruva_Krupa_Wall {
             this.brickHeight = (int) Math.ceil(brickHeight + (double) (residue / layers));
         }
         this.color = color;
+    }
+
+    public P7_Dhruva_Krupa_Wall(
+            DrawingTool pen,
+            Point origin,
+            int width,
+            int height,
+            int brickWidth,
+            int brickHeight,
+            Color color) {
+        this(
+                new P7_Dhruva_Krupa_ToolKit(pen),
+                origin,
+                width,
+                height,
+                brickWidth,
+                brickHeight,
+                color);
     }
 
     /**

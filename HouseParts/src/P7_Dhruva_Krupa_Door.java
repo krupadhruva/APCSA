@@ -61,6 +61,11 @@ public class P7_Dhruva_Krupa_Door {
         this(toolKit, origin, width, height, color, null);
     }
 
+    public P7_Dhruva_Krupa_Door(
+            DrawingTool pen, Point origin, int width, int height, Color color, Color inside) {
+        this(new P7_Dhruva_Krupa_ToolKit(pen), origin, width, height, color, inside);
+    }
+
     /**
      * Simple driver to test methods of the class
      *

@@ -57,6 +57,26 @@ public class P7_Dhruva_Krupa_Fence {
         this.count = count;
     }
 
+    public P7_Dhruva_Krupa_Fence(
+            DrawingTool pen,
+            Point origin,
+            int fenceWidth,
+            int fenceHeight,
+            int joinerWidth,
+            int joinerHeight,
+            Color color,
+            int count) {
+        this(
+                new P7_Dhruva_Krupa_ToolKit(pen),
+                origin,
+                fenceWidth,
+                fenceHeight,
+                joinerWidth,
+                joinerHeight,
+                color,
+                count);
+    }
+
     /** Draw the fence */
     public void draw() {
         DrawingTool pen = toolKit.getPen();

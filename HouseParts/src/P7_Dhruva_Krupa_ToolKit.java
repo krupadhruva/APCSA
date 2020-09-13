@@ -46,6 +46,15 @@ public final class P7_Dhruva_Krupa_ToolKit {
      * Construct toolkit from an existing DrawingTool (pen)
      *
      * @param pen Existing instance
+     */
+    public P7_Dhruva_Krupa_ToolKit(DrawingTool pen) {
+        this(pen, null);
+    }
+
+    /**
+     * Construct toolkit from an existing DrawingTool (pen)
+     *
+     * @param pen Existing instance
      * @param seed Random number generator seed. Can be null.
      */
     public P7_Dhruva_Krupa_ToolKit(DrawingTool pen, Long seed) {

@@ -54,6 +54,17 @@ public class P7_Dhruva_Krupa_RandomFlock {
         this.color = color;
     }
 
+    public P7_Dhruva_Krupa_RandomFlock(
+            DrawingTool pen,
+            Point origin,
+            int radius,
+            int width,
+            int height,
+            int count,
+            Color color) {
+        this(new P7_Dhruva_Krupa_ToolKit(pen), origin, radius, width, height, count, color);
+    }
+
     /**
      * Simple driver to test methods of the class
      *

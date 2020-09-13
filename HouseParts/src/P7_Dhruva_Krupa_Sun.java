@@ -42,6 +42,11 @@ public class P7_Dhruva_Krupa_Sun {
         this.color = color;
     }
 
+    public P7_Dhruva_Krupa_Sun(
+            DrawingTool pen, Point origin, int coreRadius, int rayRadius, Color color) {
+        this(new P7_Dhruva_Krupa_ToolKit(pen), origin, coreRadius, rayRadius, color);
+    }
+
     /**
      * Simple driver to test methods of the class
      *

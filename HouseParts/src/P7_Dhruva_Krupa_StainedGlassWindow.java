@@ -49,6 +49,11 @@ public class P7_Dhruva_Krupa_StainedGlassWindow {
         this.inside = inside;
     }
 
+    public P7_Dhruva_Krupa_StainedGlassWindow(
+            DrawingTool pen, Point origin, int width, int height, Color[] colors, Color inside) {
+        this(new P7_Dhruva_Krupa_ToolKit(pen), origin, width, height, colors, inside);
+    }
+
     /**
      * Simple driver to test methods of the class
      *
