@@ -10,6 +10,7 @@ import p7_house_parts.P7_Dhruva_Krupa_ToolKit;
 import p7_house_parts.P7_Doan_Kenny_Roof;
 import p7_house_parts.P7_Han_Eric_Wall;
 import p7_house_parts.P7_Jenna_Jaehnig_Background;
+import p7_house_parts.P7_Jenna_Jaehnig_Pathway;
 import p7_house_parts.P7_Lee_Jihoo_PottedPlant;
 import p7_house_parts.P7_Mhaiskar_Arya_Window;
 import p7_house_parts.P7_Tata_Ilyes_Tree;
@@ -19,7 +20,7 @@ import java.awt.*;
 public class P7_Dhruva_Krupa_CoolHouse {
 
     public static void main(String[] args) {
-        SketchPad pad = new SketchPad(800, 600, 5L);
+        SketchPad pad = new SketchPad(800, 600, 2L);
         P7_Dhruva_Krupa_ToolKit toolKit = new P7_Dhruva_Krupa_ToolKit(pad, null);
         DrawingTool pen = toolKit.getPen();
         toolKit.reset();
@@ -42,7 +43,7 @@ public class P7_Dhruva_Krupa_CoolHouse {
         // Grass
         P7_Dhruva_Krupa_RandomFlock grass =
                 new P7_Dhruva_Krupa_RandomFlock(
-                        toolKit, new Point(-100, -250), 5, 500, 150, 250, new Color(30, 80, 30));
+                        toolKit, new Point(-50, -250), 5, 500, 150, 250, new Color(30, 80, 30));
         grass.draw();
         toolKit.reset();
 
@@ -78,17 +79,28 @@ public class P7_Dhruva_Krupa_CoolHouse {
         window.draw();
         toolKit.reset();
 
+        P7_Jenna_Jaehnig_Pathway pathway = new P7_Jenna_Jaehnig_Pathway(-120, -170, 30, pen);
+        pathway.draw();
+
+        pathway = new P7_Jenna_Jaehnig_Pathway(-70, -190, 35, pen);
+        pathway.draw();
+
+        pathway = new P7_Jenna_Jaehnig_Pathway(-90, -220, 45, pen);
+        pathway.draw();
+
+        toolKit.reset();
+
         // First part of fence
         P7_Dhruva_Krupa_Fence fence =
                 new P7_Dhruva_Krupa_Fence(
-                        toolKit, new Point(-350, -200), 10, 60, 8, 4, Color.WHITE, 15);
+                        toolKit, new Point(-380, -200), 10, 60, 8, 4, Color.WHITE, 15);
         fence.draw();
         toolKit.reset();
 
         // Second part of fence with gap
         fence =
                 new P7_Dhruva_Krupa_Fence(
-                        toolKit, new Point(-25, -200), 10, 60, 8, 4, Color.WHITE, 5);
+                        toolKit, new Point(-30, -200), 10, 60, 8, 4, Color.WHITE, 7);
         fence.draw();
         toolKit.reset();
 
@@ -107,39 +119,21 @@ public class P7_Dhruva_Krupa_CoolHouse {
         toolKit.reset();
 
         P7_Lee_Jihoo_PottedPlant pot = new P7_Lee_Jihoo_PottedPlant(pen);
-        pot.setPlantSize(25);
         pot.setPotSize(15);
+        pot.setPlantSize(25);
 
-        pot.setPotLocation(-50, -125);
-        pot.draw();
+        for (int count = 0; count < 4; ++count) {
+            pot.setPotLocation(-50 + (25 * count), -125);
+            pot.draw();
 
-        pot.setPotLocation(-25, -125);
-        pot.draw();
+            Point flowerLocation = new Point(-50 + (25 * count), -75);
+            P7_Dhruva_Krupa_Flower flower =
+                    new P7_Dhruva_Krupa_Flower(
+                            toolKit, 3, 9, flowerLocation, Color.ORANGE, Color.RED, 5);
+            flower.draw();
+        }
 
-        pot.setPotLocation(0, -125);
-        pot.draw();
-
-        pot.setPotLocation(25, -125);
-        pot.draw();
-
-        Point flowerLocation = new Point(-50, -75);
-        P7_Dhruva_Krupa_Flower flower =
-                new P7_Dhruva_Krupa_Flower(
-                        toolKit, 3, 9, flowerLocation, Color.ORANGE, Color.RED, 5);
-        flower.draw();
-
-        flowerLocation.translate(25, 0);
-        flower =
-                new P7_Dhruva_Krupa_Flower(
-                        toolKit, 3, 9, flowerLocation, Color.ORANGE, Color.RED, 5);
-        flower.draw();
-
-        flowerLocation.translate(60, 0);
-        flower =
-                new P7_Dhruva_Krupa_Flower(
-                        toolKit, 3, 9, flowerLocation, Color.ORANGE, Color.RED, 5);
-        flower.draw();
-
+        // Help with aligning different parts
         // Dimension dim = pen.getPadPanel().getSize();
         // toolKit.setOrigin(new Point(-dim.width / 2, -dim.height / 2));
         // toolKit.drawScale();
