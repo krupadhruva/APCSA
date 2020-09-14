@@ -17,6 +17,24 @@ import p7_house_parts.P7_Tata_Ilyes_Tree;
 
 import java.awt.*;
 
+/*
+ * Name: Krupa Dhruva
+ * Date: September 13, 2020
+ * Period: 7
+ * Time Taken: ~5 Hours
+ *
+ * Lab Reflection:
+ * I took a lot of time trying to position and scale each of the objects.
+ * This was especially challenging because a lot of people had constructors that
+ * took different arguments and also there was some variation in what everyone considered
+ * their "origin" to be was also a little confusing. Overall, it was pretty fun getting
+ * to see what others did and the different ways each house part was implemented.
+ *
+ * In my HouseParts, I had a "toolKit" class that had all the drawing tools needed
+ * passed in as constructor argument. It would have been better if I had just taken
+ * Drawing Tool as an argument instead.
+ */
+
 public class P7_Dhruva_Krupa_CoolHouse {
 
     public static void main(String[] args) {
