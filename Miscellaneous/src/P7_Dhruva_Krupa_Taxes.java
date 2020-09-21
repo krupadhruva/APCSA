@@ -1,12 +1,3 @@
-/*
- * Name: Krupa Dhruva
- * Date: September 20, 2020
- * Period: 7
- * Time Taken: 30 minutes
- *
- * Lab Reflection:
- */
-
 public class P7_Dhruva_Krupa_Taxes {
 
     private static final double PERCENTAGE_FEDERAL_TAX = 15.4;
@@ -35,7 +26,7 @@ public class P7_Dhruva_Krupa_Taxes {
     /**
      * Validate input and set hours worked
      *
-     * @param hoursWorked Total hours worked (>=0)
+     * @param hoursWorked Total hours worked (&ge; 0)
      */
     public void setHoursWorked(double hoursWorked) {
         if (hoursWorked >= 0.0) {
@@ -46,7 +37,7 @@ public class P7_Dhruva_Krupa_Taxes {
     /**
      * Validate input and set hourly pay/rate
      *
-     * @param hourlyPay Per hour pay/rate (>=0)
+     * @param hourlyPay Per hour pay/rate (&ge; 0)
      */
     public void setHourlyPay(double hourlyPay) {
         if (hourlyPay >= 0.0) {
@@ -169,15 +160,5 @@ public class P7_Dhruva_Krupa_Taxes {
                         getPercentageStateTax(),
                         getStateTax(),
                         getNetPay()));
-    }
-
-    /**
-     * Simple driver for testing
-     *
-     * @param ignored Command line arguments (not used)
-     */
-    public static void main(String[] ignored) {
-        P7_Dhruva_Krupa_Taxes taxes = new P7_Dhruva_Krupa_Taxes(30, 12.35);
-        taxes.printTaxes();
     }
 }

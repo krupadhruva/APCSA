@@ -1,42 +1,23 @@
-import gpdraw.DrawingTool;
-import gpdraw.SketchPad;
-
-import java.awt.Color;
-
 /*
  * Name: Krupa Dhruva
- * Date: September 16, 2020
+ * Date: September 20, 2020
  * Period: 7
- * Time Taken: 2 hours
+ * Time Taken: 30 minutes
  *
  * Lab Reflection:
- * This lab was pretty fun! The planning process was the most challenging
- * part of this assignment as there was quite a bit of logic that needed to spread across
- * helper methods. Overall, I am really proud of my illusion even though it is a little
- * simplistic in the sense that it only has straight lines. On the contrary, the simplicity
- * was still powerful in creating a cool illusion. Next time, I would like to explore animation
- * based illusions if possible (like the moving dots illusion).
- *
+ * The lab was fairly simple but it was a nice way to practice working with setter and getter methods.
+ * I learnt how to avoid code duplication by error handling in setters and resuing them in constructors.
+ * I also got to practice working with format specifiers during this lab.
  */
 
 public class P7_Dhruva_Krupa_Driver {
-    public static void main(String[] args) throws InterruptedException {
-        SketchPad pad = new SketchPad(800, 600, 5L);
-        DrawingTool pen = new DrawingTool(pad);
-
-        // Build with simple constructor with default values
-        P7_Dhruva_Krupa_Illusion illusion = new P7_Dhruva_Krupa_Illusion(pen);
-        illusion.draw();
-        Thread.sleep(1000);
-
-        // Build with custom values
-        illusion = new P7_Dhruva_Krupa_Illusion(pen, 50, 50, Color.CYAN, Color.RED.darker());
-        illusion.draw();
-        Thread.sleep(1000);
-
-        // Use setters to update existing values
-        illusion.setForeground(Color.YELLOW);
-        illusion.setBackground(Color.BLUE.darker());
-        illusion.draw();
+    /**
+     * Simple driver for testing
+     *
+     * @param ignored Command line arguments (not used)
+     */
+    public static void main(String[] ignored) {
+        P7_Dhruva_Krupa_Taxes taxes = new P7_Dhruva_Krupa_Taxes(30, 12.35);
+        taxes.printTaxes();
     }
 }
