@@ -7,7 +7,7 @@
 
 import gpdraw.*;
 
-public class P7_Dhruva_Krupa_Math {
+public class Rectangle {
 
     private double myX; // lower left x-coord in pixels
     private double myY; // lower left y-coord in pixels
@@ -17,7 +17,7 @@ public class P7_Dhruva_Krupa_Math {
     private DrawingTool pen;
 
     // (x, y) is the lower left corner of the rectangle
-    public P7_Dhruva_Krupa_Math(double x, double y, double width, double height, SketchPad pad) {
+    public Rectangle(double x, double y, double width, double height, SketchPad pad) {
         myX = x;
         myY = y;
         myWidth = width;
