@@ -60,4 +60,11 @@ public class Rectangle {
     public double getHeight() {
         return myHeight;
     }
+
+    @Override
+    public String toString() {
+        return String.format(
+                "Height=%.2f, Width=%.2f, Perimeter=%.2f, Area=%.2f",
+                getHeight(), getWidth(), calcPerimeter(), calcArea());
+    }
 }
