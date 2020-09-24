@@ -1,0 +1,15 @@
+#!/usr/bin/env sh
+#-------------------------------------------------------------------------------
+# usage:
+# 	gen_javadocs path/to/file.java
+#	gen_javadocs -sourcepath path/to/src
+#-------------------------------------------------------------------------------
+
+
+TOP=$(dirname $(dirname $0))
+set -xe
+
+mkdir -p ${TOP}/out/javadoc
+
+classpath=$(echo ${TOP}/resources/*.jar|tr ' ' ':')
+javadoc -private -cp ${classpath} -d ${TOP}/out/javadoc $*
