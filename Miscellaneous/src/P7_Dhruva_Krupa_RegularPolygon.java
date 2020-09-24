@@ -2,9 +2,16 @@
  * Name: Krupa Dhruva
  * Date: September 22, 2020
  * Period: 7
- * Time Taken: 30 minutes
+ * Time Taken: 60 minutes
  *
  * Lab Reflection:
+ * Note: The default side length was not specified, hence, I assumed 0.
+ *
+ * Overall, this was a good exposure to the trignometric functions in the
+ * math library. I also learned to avoid using degrees since the math
+ * library functions expect radians.
+ * Using a helper function to print the polygon details helped me avoid
+ * code duplication.
  */
 
 public class P7_Dhruva_Krupa_RegularPolygon {
