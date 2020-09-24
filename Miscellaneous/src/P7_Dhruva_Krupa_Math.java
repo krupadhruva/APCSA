@@ -229,6 +229,7 @@ public class P7_Dhruva_Krupa_Math {
      * @param args Command line arguments
      */
     public static void main(String[] args) {
+        System.out.println("Temperature Converter:");
         double fromTemp = 212;
         double toTemp = P7_Dhruva_Krupa_Math.fToC(fromTemp);
         System.out.println(P7_Dhruva_Krupa_Math.temperatureToString(fromTemp, toTemp, true));
