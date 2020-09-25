@@ -5,11 +5,12 @@
 #	gen_javadocs -sourcepath path/to/src
 #-------------------------------------------------------------------------------
 
+TOP=$(git rev-parse --show-toplevel 2>/dev/null)
+TOP=${TOP:-$(dirname $(dirname $0))}
 
-TOP=$(dirname $(dirname $0))
 set -xe
 
-mkdir -p ${TOP}/out/javadoc
+${ACTION} mkdir -p ${TOP}/out/javadoc
 
 classpath=$(echo ${TOP}/resources/*.jar|tr ' ' ':')
-javadoc -private -cp ${classpath} -d ${TOP}/out/javadoc $*
+${ACTION} javadoc -private -cp ${classpath} -d ${TOP}/out/javadoc $*
