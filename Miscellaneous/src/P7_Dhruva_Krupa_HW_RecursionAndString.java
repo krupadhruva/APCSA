@@ -1,4 +1,4 @@
-public class RecursionAndString {
+public class P7_Dhruva_Krupa_HW_RecursionAndString {
     // ------- String manipulation ---------
 
     // Replicate first 2 chars of a string 3 times
@@ -166,7 +166,17 @@ public class RecursionAndString {
         return ((nums[index] == 11) ? 1 : 0) + array11(nums, index + 1);
     }
 
+    public static void printDiamond(int n) {
+        for (int row = 0; row < n; ++row) {
+            System.out.println(" ".repeat(n - row) + "*".repeat(1 + (2 * row)));
+        }
+
+        for (int row = n - 2; row >= 0; --row) {
+            System.out.println(" ".repeat(n - row) + "*".repeat(1 + (2 * row)));
+        }
+    }
+
     public static void main(String[] args) {
-        System.out.println(withoutX("xobxjectx"));
+        printDiamond(5);
     }
 }
