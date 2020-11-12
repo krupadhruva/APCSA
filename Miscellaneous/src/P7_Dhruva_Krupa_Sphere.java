@@ -32,52 +32,68 @@ public class P7_Dhruva_Krupa_Sphere {
     /** Pen to draw the shape */
     private final DrawingTool pen;
     /** Origin of the sphere */
-    private final Point origin;
+    private Point origin;
     /** View point */
-    private final Point viewPoint;
+    private Point viewPoint;
     /** Sphere radius */
-    private final int radius;
+    private int radius;
     /** Sphere color */
-    private final Color color;
+    private Color color;
     /** Number of wire frames to draw */
-    private final int numberOfFrames;
+    private int numberOfFrames;
 
-    /**
-     * Constructs a solid sphere using shading
-     *
-     * @param pen Instance of DrawingTool
-     * @param origin Sphere origin/location
-     * @param viewPoint Point of view or focus of light source
-     * @param radius Radius of sphere
-     * @param color Color of sphere
-     */
-    public P7_Dhruva_Krupa_Sphere(
-            DrawingTool pen, Point origin, Point viewPoint, int radius, Color color) {
-        this(pen, origin, radius, color, 0);
-
-        // Ensure view point in within the sphere
-        if (origin.distance(viewPoint) <= (double) radius) {
-            this.viewPoint.setLocation(viewPoint);
-        }
+    public void setOrigin(Point origin) {
+        this.origin = origin;
     }
 
-    /**
-     * Constructs a sphere with wire frames
-     *
-     * @param pen Instance of DrawingTool
-     * @param origin Sphere origin/location
-     * @param radius Radius of sphere
-     * @param color Color of sphere
-     * @param numberOfFrames Number of wire frames. Can be 0 for solid rendering
-     */
-    public P7_Dhruva_Krupa_Sphere(
-            DrawingTool pen, Point origin, int radius, Color color, int numberOfFrames) {
-        this.pen = pen;
-        this.origin = origin;
-        this.viewPoint = origin.getLocation();
+    public void setViewPoint(Point viewPoint) {
+        this.viewPoint = viewPoint;
+    }
+
+    public void setRadius(int radius) {
         this.radius = radius;
+    }
+
+    public void setColor(Color color) {
         this.color = color;
+    }
+
+    public void setNumberOfFrames(int numberOfFrames) {
         this.numberOfFrames = numberOfFrames;
+    }
+
+    public DrawingTool getPen() {
+        return pen;
+    }
+
+    public Point getOrigin() {
+        return origin;
+    }
+
+    public Point getViewPoint() {
+        return viewPoint;
+    }
+
+    public int getRadius() {
+        return radius;
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public int getNumberOfFrames() {
+        return numberOfFrames;
+    }
+
+    /** Constructs a sphere with wire frames with default parameters */
+    public P7_Dhruva_Krupa_Sphere(DrawingTool pen) {
+        this.pen = pen;
+        this.origin = new Point(200, 0);
+        this.viewPoint = origin.getLocation();
+        this.radius = 100;
+        this.color = Color.BLACK;
+        this.numberOfFrames = 0;
     }
 
     /**
@@ -86,19 +102,52 @@ public class P7_Dhruva_Krupa_Sphere {
      * @param args Array of strings - command line arguments
      */
     public static void main(String[] args) {
-        SketchPad pad = new SketchPad(800, 600, 5L);
-        DrawingTool pen = new DrawingTool(pad);
-        Color color = Color.BLACK;
+        DrawingTool pen = new DrawingTool(new SketchPad(800, 600, 5L));
 
-        P7_Dhruva_Krupa_Sphere wire =
-                new P7_Dhruva_Krupa_Sphere(pen, new Point(-200, 0), 100, color, 30);
-        wire.draw();
+        // Draw a wireframe model of sphere
+        P7_Dhruva_Krupa_Sphere sphere = new P7_Dhruva_Krupa_Sphere(pen);
+        sphere.setOrigin(new Point(-200, 0));
+        sphere.setRadius(100);
+        sphere.setNumberOfFrames(30);
+        sphere.draw();
 
-        Point origin = new Point(200, 0);
-        Point viewPoint = new Point(150, 50);
-        P7_Dhruva_Krupa_Sphere solid =
-                new P7_Dhruva_Krupa_Sphere(pen, origin, viewPoint, 100, color);
-        solid.draw();
+        // Draw a solid sphere
+        sphere.setNumberOfFrames(0);
+        sphere.setOrigin(new Point(200, 0));
+        sphere.setViewPoint(new Point(150, 50));
+        sphere.draw();
+
+        System.out.printf(
+                "Sphere geometric properties: radius=%d, circumference=%.2f, area=%.2f,"
+                        + " volume=%.2f%n",
+                sphere.getRadius(), sphere.circumference(), sphere.area(), sphere.volume());
+    }
+
+    /**
+     * Compute the volume of the sphere
+     *
+     * @return Volume of sphere
+     */
+    public double volume() {
+        return (4.0 / 3.0) * Math.PI * Math.pow(radius, 3);
+    }
+
+    /**
+     * Compute the surface area of the sphere
+     *
+     * @return Surface area of sphere
+     */
+    public double area() {
+        return 4.0 * Math.PI * Math.pow(radius, 2);
+    }
+
+    /**
+     * Compute the circumference of the sphere
+     *
+     * @return Circumference of sphere
+     */
+    public double circumference() {
+        return 2.0 * Math.PI * radius;
     }
 
     /**
