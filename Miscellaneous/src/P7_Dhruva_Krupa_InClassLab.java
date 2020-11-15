@@ -5,6 +5,11 @@ import java.awt.Color;
 
 public class P7_Dhruva_Krupa_InClassLab {
     public static void printDiamond(int n) {
+        if (n < 1 || n > 40) {
+            System.out.println("n is too small or too big.");
+            return;
+        }
+
         for (int row = 0; row < n; ++row) {
             System.out.println(" ".repeat(n - row) + "*".repeat(1 + (2 * row)));
         }
@@ -64,7 +69,6 @@ public class P7_Dhruva_Krupa_InClassLab {
 
     public static void main(String[] args) {
         printDiamond(5);
-
         P7_Dhruva_Krupa_InClassLab checkerBoard = new P7_Dhruva_Krupa_InClassLab();
         checkerBoard.printCheckerBoard();
     }
