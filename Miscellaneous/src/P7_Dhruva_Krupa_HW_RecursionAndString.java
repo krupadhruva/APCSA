@@ -50,6 +50,10 @@ public class P7_Dhruva_Krupa_HW_RecursionAndString {
 
     // Check if first string starts with second ignoring first char
     public static String startWord(String str, String word) {
+        if (str.length() == 0) {
+            return str;
+        }
+
         String firstStr = str.substring(1);
         String secStr = word.substring(1);
 
@@ -166,17 +170,127 @@ public class P7_Dhruva_Krupa_HW_RecursionAndString {
         return ((nums[index] == 11) ? 1 : 0) + array11(nums, index + 1);
     }
 
-    public static void printDiamond(int n) {
-        for (int row = 0; row < n; ++row) {
-            System.out.println(" ".repeat(n - row) + "*".repeat(1 + (2 * row)));
+    public String pairStar(String str) {
+        if (str.length() <= 1) {
+            return str;
         }
 
-        for (int row = n - 2; row >= 0; --row) {
-            System.out.println(" ".repeat(n - row) + "*".repeat(1 + (2 * row)));
+        return String.format(
+                "%c%s%s",
+                str.charAt(0),
+                (str.charAt(0) == str.charAt(1)) ? "*" : "",
+                pairStar(str.substring(1)));
+    }
+
+    public String endX(String str) {
+        if (str.length() <= 1) {
+            return str;
         }
+
+        if (str.startsWith("x")) {
+            return endX(str.substring(1)) + "x";
+        }
+
+        return str.charAt(0) + endX(str.substring(1));
+    }
+
+    public int countPairs(String str) {
+        if (str.length() < 3) {
+            return 0;
+        }
+
+        return ((str.charAt(0) == str.charAt(2)) ? 1 : 0) + countPairs(str.substring(1));
+    }
+
+    public int countAbc(String str) {
+        if (str.length() < 3) {
+            return 0;
+        }
+
+        return ((str.startsWith("abc") || str.startsWith("aba")) ? 1 : 0)
+                + countAbc(str.substring(1));
+    }
+
+    public int count11(String str) {
+        if (str.length() < 2) {
+            return 0;
+        }
+
+        if (str.startsWith("11")) {
+            return 1 + count11(str.substring(2));
+        }
+
+        return count11(str.substring(1));
+    }
+
+    public String stringClean(String str) {
+        if (str.length() < 2) {
+            return str;
+        }
+
+        if (str.charAt(0) == str.charAt(1)) {
+            return stringClean(str.substring(1));
+        }
+
+        return str.charAt(0) + stringClean(str.substring(1));
+    }
+
+    public int countHi2(String str) {
+        if (str.length() < 2) {
+            return 0;
+        }
+
+        if (str.length() == 2 && str.equals("hi")) {
+            return 1;
+        }
+
+        if (str.startsWith("xhi")) {
+            return countHi2(str.substring(3));
+        }
+
+        if (str.startsWith("hi")) {
+            return 1 + countHi2(str.substring(2));
+        }
+
+        return countHi2(str.substring(1));
+    }
+
+    public String parenBit(String str) {
+        if (str.length() == 0) {
+            return str;
+        }
+
+        boolean starts = str.startsWith("(");
+        boolean ends = str.endsWith(")");
+        if (starts && ends) {
+            return str;
+        }
+
+        String sub = starts ? str.substring(0, str.length() - 1) : str.substring(1);
+        return parenBit(sub);
+    }
+
+    public boolean nestParen(String str) {
+        if (str.length() == 0) {
+            return true;
+        }
+
+        if (str.length() == 1) {
+            return false;
+        }
+
+        boolean starts = str.startsWith("(");
+        boolean ends = str.endsWith(")");
+        if (starts && ends) {
+            return nestParen(str.substring(1, str.length() - 1));
+        }
+
+        String sub = starts ? str.substring(0, str.length() - 1) : str.substring(1);
+        return nestParen(sub);
     }
 
     public static void main(String[] args) {
-        printDiamond(5);
+        P7_Dhruva_Krupa_HW_RecursionAndString obj = new P7_Dhruva_Krupa_HW_RecursionAndString();
+        System.out.println(obj.nestParen("(())"));
     }
 }
