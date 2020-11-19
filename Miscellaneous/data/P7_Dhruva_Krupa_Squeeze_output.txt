@@ -1,0 +1,39 @@
+0 import java.util.Scanner;
+0 
+0 public class LeetSpeak {
+1 
+1 public static void main(String[] args) {
+2 
+2 Scanner in = new Scanner(System.in);
+2 
+2 System.out.print("Please enter a sentence in English > ");
+2 String input = in.nextLine();
+2 String output = "";
+2 char nextChar = 0;
+2 
+2 // go through input and replace common characters
+2 
+2 for (int i = 0; i < input.length(); i++) {
+3 
+3 nextChar = input.charAt(i);
+3 
+3 switch (nextChar) {
+4 
+4 case 'o': case 'O': output += '0'; break;
+4 case 'i': case 'I': output += '1'; break;
+4 case 'z': case 'Z': output += '2'; break;
+4 case 'e': case 'E': output += '3'; break;
+4 case 'a': case 'A': output += '4'; break;
+4 case 's': case 'S': output += '5'; break;
+4 case 'g': case 'G': output += '6'; break;
+4 case 't': case 'T': output += '7'; break;
+4 case 'b': case 'B': output += '8'; break;
+4 case 'p': case 'P': output += '9'; break;
+4 default: output += nextChar;
+3 }
+2 }
+2 
+2 System.out.println("\n\nThe 1337 way to write your sentence is \"" +
+7 output + "\"\n\n");
+1 }	
+0 }
