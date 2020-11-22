@@ -35,9 +35,16 @@ public class P7_Dhruva_Krupa_Squeeze {
     public static void squeezeLeadingTabs(FileInputStream in, FileOutputStream out)
             throws IOException {
         Scanner scan = new Scanner(in);
+
+        // Lines can be either end with LF ("\n") OR CRLF ("\r\n"). Since LF is common
+        // in both cases and LF comes at the very end, read till LF to get CR if present
+        // at end of line before LF. Since we set the token delimiter as LF, fetch next
+        // token and not next line
+        scan.useDelimiter("\n");
+
         while (scan.hasNext()) {
             // Read the line w/o leading tabs
-            String line = scan.nextLine();
+            String line = scan.next();
 
             // Squeeze: Remove all leading tabs in a line
             String squeezed = line.replaceAll("^\t+", "");
@@ -46,7 +53,7 @@ public class P7_Dhruva_Krupa_Squeeze {
             int tabCount = line.length() - squeezed.length();
 
             // Form the encoded squeezed line with new line
-            squeezed = String.format("%d %s%n", tabCount, squeezed);
+            squeezed = String.format("%d %s\n", tabCount, squeezed);
 
             System.out.print(squeezed);
             out.write(squeezed.getBytes());
