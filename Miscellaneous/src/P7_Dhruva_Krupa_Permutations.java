@@ -1,3 +1,17 @@
+/*
+ * Name: Krupa Dhruva
+ * Date: November 22, 2020
+ * Period: 7
+ * Time Taken: 30 minutes
+ *
+ * Lab Reflection:
+ * To avoid repetition in calling the add(), I used addAll() to fill a list in one go.
+ * This was a fun lab where I go to better work with randomization and also practice
+ * using Array Lists. I also had fun coming up with a solution as to how to deal with
+ * changing element numbers. I handled this by checking if the number is less than the
+ * size of the list.
+ */
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
