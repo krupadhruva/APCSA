@@ -1,10 +1,10 @@
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Iterator;
 import java.util.PrimitiveIterator;
 import java.util.Random;
 
 public class P7_Dhruva_Krupa_InClassLab15 {
-    public static void printList(List<Integer> numbers) {
+    public static void printList(ArrayList<Integer> numbers) {
         System.out.print("[");
         int count = 0;
         for (Integer num : numbers) {
@@ -18,9 +18,9 @@ public class P7_Dhruva_Krupa_InClassLab15 {
         System.out.println("]");
     }
 
-    public static List<Integer> randomList(int n, int a, int b) {
+    public static ArrayList<Integer> randomList(int n, int a, int b) {
         PrimitiveIterator.OfInt random = new Random().ints(a, b + 1).iterator();
-        List<Integer> randInts = new ArrayList<>();
+        ArrayList<Integer> randInts = new ArrayList<>();
         for (int count = 0; count < n; ++count) {
             randInts.add(random.nextInt());
         }
@@ -28,15 +28,50 @@ public class P7_Dhruva_Krupa_InClassLab15 {
         return randInts;
     }
 
-    public static void main(String[] args) {
-        List<Integer> numbers = new ArrayList<>();
-        numbers.add(4);
-        numbers.add(2);
-        numbers.add(9);
-        numbers.add(1);
-        numbers.add(7);
+    public static void removeNegatives(ArrayList<Integer> nums) {
+        Iterator<Integer> iter = nums.iterator();
+        while (iter.hasNext()) {
+            if (iter.next() < 0) {
+                iter.remove();
+            }
+        }
+    }
 
-        P7_Dhruva_Krupa_InClassLab15.printList(numbers);
-        P7_Dhruva_Krupa_InClassLab15.printList(randomList(10, 1, 15));
+    public static ArrayList<Integer> commonList(
+            ArrayList<Integer> list1, ArrayList<Integer> list2) {
+        ArrayList<Integer> result = new ArrayList<>();
+        Iterator<Integer> iter = list1.iterator();
+        while (iter.hasNext()) {
+            Integer value = iter.next();
+
+            // Avoid duplicates in results
+            if (list2.contains(value) && !result.contains(value)) {
+                result.add(value);
+            }
+        }
+
+        return result;
+    }
+
+    public static void main(String[] args) {
+        ArrayList<Integer> a = randomList(25, -5, 10);
+        ArrayList<Integer> b = randomList(25, -5, 10);
+
+        System.out.println("BEFORE");
+        System.out.print("a = ");
+        printList(a);
+        System.out.print("b = ");
+        printList(b);
+
+        removeNegatives(a);
+        removeNegatives(b);
+        System.out.println("\nAFTER REMOVING NEGATIVES");
+        System.out.print("a = ");
+        printList(a);
+        System.out.print("b = ");
+        printList(b);
+
+        System.out.println("\nCOMMON LIST");
+        printList(commonList(a, b));
     }
 }
