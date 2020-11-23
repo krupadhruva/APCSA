@@ -22,14 +22,21 @@ public class P7_Dhruva_Krupa_Permutations {
     // Returns an ArrayList of Integers that are a permutation of the numbers 1-10
     public static ArrayList<Integer> nextPermutation() {
         List<Integer> numList = new ArrayList<>(10);
+
+        // To add numbers to the list all at once instead of using add()
         Collections.addAll(numList, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
         Random rand = new Random();
 
         ArrayList<Integer> output = new ArrayList<>(10);
+
+        // Loops until the list is empty
         while (!numList.isEmpty()) {
             PrimitiveIterator.OfInt ints = rand.ints(0, numList.size()).iterator();
             int idx = ints.nextInt();
             output.add(numList.get(idx));
+
+            // Ensures that the list ends & there are no repeats. Without this, the loop would never
+            // end.
             numList.remove(idx);
         }
 
