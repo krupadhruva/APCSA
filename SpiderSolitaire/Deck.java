@@ -17,12 +17,7 @@
  * dealt from the top.
  */
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.PrimitiveIterator;
-import java.util.Random;
-import java.util.Stack;
+import java.util.*;
 
 public class Deck {
     /* *** TO BE IMPLEMENTED IN ACTIVITY 3 *** */
@@ -75,16 +70,14 @@ public class Deck {
      * @param count Number of cards to deal
      * @return List of cards with face turned up
      */
-    public List<Card> deal(int count) {
-        if (count > deck.size()) {
+    public Collection<Card> deal(int count) {
+        if (count == 0 || count > deck.size()) {
             return Collections.emptyList();
         }
 
         List<Card> result = new ArrayList<>(count);
         for (int cc = 0; cc < count; ++cc) {
-            Card card = deck.pop();
-            card.setFaceUp(true);
-            result.add(card);
+            result.add(deck.pop());
         }
 
         return result;
@@ -109,6 +102,15 @@ public class Deck {
      */
     @Override
     public String toString() {
+        return deck.toString();
+    }
+
+    /**
+     * Used for debugging, will show card details
+     *
+     * @return <code>String</code> representation of cards in deck
+     */
+    public String debugToString() {
         List<String> symbols = new ArrayList<>(deck.size());
         for (Card card : deck) {
             symbols.add(
@@ -118,5 +120,25 @@ public class Deck {
         }
 
         return symbols.toString();
+    }
+
+    /**
+     * Helper method to make a deck of cards (single suit)
+     *
+     * @return List of cards
+     */
+    public static List<Card> makeDefaultCards() {
+        String[] symbols = {"A", "2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K"};
+        int[] values = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13};
+
+        // Run with JVM option '-ea'
+        assert symbols.length == values.length;
+
+        List<Card> cards = new ArrayList<>();
+        for (int cc = 0; cc < symbols.length; ++cc) {
+            cards.add(new Card(symbols[cc], values[cc]));
+        }
+
+        return cards;
     }
 }

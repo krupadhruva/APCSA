@@ -1,20 +1,20 @@
+import java.util.Collection;
+
 public class DeckTester {
     public static void main(String[] args) {
         /* *** TO BE IMPLEMENTED IN ACTIVITY 3 *** */
-        String[] symbols = {"A", "2", "3", "4", "5", "6", "7", "8", "9", "T", "J", "Q", "K"};
-        int[] values = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13};
-
-        if (symbols.length != values.length) {
-            throw new AssertionError();
-        }
-
         Deck deck = new Deck();
-        for (int cc = 0; cc < symbols.length; ++cc) {
-            deck.add(new Card(symbols[cc], values[cc]));
-        }
+        deck.add(Deck.makeDefaultCards());
 
-        System.out.println("Before shuffle: " + deck);
+        System.out.println("Before shuffle: " + deck.debugToString());
         deck.shuffle();
-        System.out.println("After shuffle : " + deck);
+        System.out.println("After shuffle : " + deck.debugToString());
+
+        Collection<Card> dealt = deck.deal(5);
+        dealt.forEach(c -> c.setFaceUp(true));
+        System.out.println("Dealt cards   : " + dealt);
+
+        // Check equality of list of cards
+        assert Deck.makeDefaultCards().equals(Deck.makeDefaultCards());
     }
 }

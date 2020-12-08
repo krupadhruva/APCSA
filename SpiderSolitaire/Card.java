@@ -30,9 +30,20 @@ public class Card implements Comparable<Card> {
      */
     public Card(String symbol, int value) {
         /* *** TO BE IMPLEMENTED IN ACTIVITY 2 *** */
-        this.symbol = symbol;
+        this(symbol, value, false);
+    }
+
+    /**
+     * Underlying constructor allowing state for all attributes
+     *
+     * @param symbol a <code>String</code> value representing the symbol of the card
+     * @param value an <code>int</code> value containing the point value of the card
+     * @param isFaceUp a <code>boolean</code> value indicating if card is facing up
+     */
+    public Card(String symbol, int value, boolean isFaceUp) {
+        this.symbol = symbol.toUpperCase();
         this.value = value;
-        this.isFaceUp = false;
+        this.isFaceUp = isFaceUp;
     }
 
     /**
@@ -78,9 +89,12 @@ public class Card implements Comparable<Card> {
      *
      * @return whether or not this Card is equal to other.
      */
-    public boolean equals(Card other) {
+    @Override
+    public boolean equals(Object other) {
         /* *** TO BE IMPLEMENTED IN ACTIVITY 2 *** */
-        return getValue() == other.getValue();
+        return other instanceof Card
+                && compareTo((Card) other) == 0
+                && isFaceUp() == ((Card) other).isFaceUp();
     }
 
     /**
