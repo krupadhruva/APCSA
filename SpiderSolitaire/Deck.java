@@ -17,10 +17,14 @@
  * dealt from the top.
  */
 
+import java.io.Serializable;
 import java.util.*;
 
-public class Deck {
+public class Deck implements Serializable {
     /* *** TO BE IMPLEMENTED IN ACTIVITY 3 *** */
+    // Source: https://mkyong.com/java/how-to-read-and-write-java-object-to-a-file/
+    // To ensure we read the same version from saved file
+    private static final long serialVersionUID = 1L;
 
     private final Stack<Card> deck;
     private final int SHUFFLE_COUNT = 100;
@@ -140,5 +144,29 @@ public class Deck {
         }
 
         return cards;
+    }
+
+    /**
+     * Used for testing to compare original and loaded deck
+     *
+     * @param other <code>Deck<code/> to compare against
+     * @return <code>boolean</code> True if equals
+     */
+    @Override
+    public boolean equals(Object other) {
+        if (this == other) return true;
+        if (other == null || getClass() != other.getClass()) return false;
+        Deck otherDeck = (Deck) other;
+        return SHUFFLE_COUNT == otherDeck.SHUFFLE_COUNT && deck.equals(otherDeck.deck);
+    }
+
+    /**
+     * Required for implementing equals()
+     *
+     * @return
+     */
+    @Override
+    public int hashCode() {
+        return Objects.hash(deck, SHUFFLE_COUNT);
     }
 }

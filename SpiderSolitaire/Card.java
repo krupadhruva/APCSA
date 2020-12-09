@@ -8,16 +8,22 @@
  * Details are in class Deck
  */
 
+import java.io.Serializable;
+
 /** Card.java <code>Card</code> represents a basic playing card. */
-public class Card implements Comparable<Card> {
+public class Card implements Comparable<Card>, Serializable {
+    // Source: https://mkyong.com/java/how-to-read-and-write-java-object-to-a-file/
+    // To ensure we read the same version from saved file
+    private static final long serialVersionUID = 1L;
+
     /**
      * String value that holds the symbol of the card. Examples: "A", "Ace", "10", "Ten", "Wild",
      * "Pikachu"
      */
-    private String symbol;
+    private final String symbol;
 
     /** int value that holds the value this card is worth */
-    private int value;
+    private final int value;
 
     /** boolean value that determines whether this card is face up or down */
     private boolean isFaceUp;
