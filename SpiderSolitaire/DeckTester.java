@@ -1,11 +1,17 @@
 import java.io.*;
 import java.util.Collection;
+import java.util.List;
 
 public class DeckTester {
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         /* *** TO BE IMPLEMENTED IN ACTIVITY 3 *** */
         Deck deck = new Deck();
-        deck.add(Deck.makeDefaultCards());
+        List<Card> cards = Deck.makeDefaultCards();
+        deck.add(cards);
+
+        // Should not find a card with face down from deck of cards
+        assert cards.lastIndexOf(new Card(cards.get(0).getSymbol(), cards.get(0).getValue(), true))
+                == -1;
 
         System.out.println("Before shuffle: " + deck.debugToString());
         deck.shuffle();

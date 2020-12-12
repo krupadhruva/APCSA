@@ -1,3 +1,20 @@
+/*
+ * Name: Krupa Dhruva
+ * Date: December 11, 2020
+ * Period: 7
+ * Time Taken: 70 minutes (error handling)
+ *
+ * Lab Reflection:
+ * Coming up with different error scenarios was time consuming. I played the game
+ * multiple times by providing different invalid inputs and handling them.
+ *
+ * Overall, I have divided the errors into user entered invalid data types and
+ * errors that do not comply with the game rules. Since the only data type
+ * mismatch error is when user enters a non-integer when we expect numeric inputs,
+ * I am able to handle it with a single try/catch block. Handling game errors are
+ * done in methods and they all set an error string that is printed on the console.
+ */
+
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
