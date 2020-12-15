@@ -45,7 +45,8 @@ public class ArrayPlayground {
         System.out.println(master.allGoldMembers());
         
         // Testing replaceWords
-        System.out.println(replaceWords("the bigger the bold and the big bold"));        
+        System.out.println(replaceWords("the bigger the bold and the big bold"));
+        System.out.println(replaceWordsRegex("the bigger the bold and the big bold"));
     }
 
     private static String reverseString(String target) {
@@ -136,5 +137,29 @@ public class ArrayPlayground {
         }
         
         return out.toString();
+    }
+
+    public static String replaceWordsRegex(String str) {
+        Scanner scan = new Scanner(str);
+        Map<String, Integer> wordIndex = new HashMap<>();
+        while (scan.hasNext()) {
+            String word = scan.next();
+            word = word.replaceAll("[^a-zA-Z0-9]", "");
+            if (!wordIndex.containsKey(word)) {
+                wordIndex.put(word, str.indexOf(word));
+            }
+        }
+
+        String[] out = new String[1];
+        out[0] = str;
+
+        wordIndex.forEach(
+                (key, value) -> {
+                    out[0] =
+                            out[0].replaceAll(String.format("\\b%s\\b", key), String.valueOf(value))
+                                    .replaceFirst(String.format("\\b%d\\b", value), key);
+                });
+
+        return out[0];
     }
 }
