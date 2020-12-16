@@ -131,6 +131,7 @@ public class ArrayPlayground {
                 words.add(new Word(w, index));
             }
 
+            index += w.length();
             out.append(" ");
         }
         

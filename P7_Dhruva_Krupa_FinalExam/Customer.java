@@ -31,6 +31,6 @@ public class Customer implements Comparable<Customer> {
         return String.format("%c%s%s",
                 getFirstName().toLowerCase().charAt(0),
                 getLastName(),
-                String.valueOf(getID()).substring(0, 3));
+                String.valueOf(getID() + "000").substring(0, 3));
     }
 }
