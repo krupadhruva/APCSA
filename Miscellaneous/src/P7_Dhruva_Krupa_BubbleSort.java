@@ -45,7 +45,7 @@ public class P7_Dhruva_Krupa_BubbleSort {
      */
     public static void bubbleSort2(String[] data) {
         for (int ii = 0; ii < data.length - 1; ++ii) {
-            for (int jj = data.length - 1 - ii; jj > 0; --jj) {
+            for (int jj = data.length - 1; jj > ii; --jj) {
                 if (data[jj].compareTo(data[jj - 1]) < 0) {
                     String tmp = data[jj];
                     data[jj] = data[jj - 1];
