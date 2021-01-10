@@ -21,16 +21,16 @@ public class P7_Dhruva_Krupa_SelectionSort {
 
     public static void selectionSort2(String[] data) {
         for (int pass = 0; pass < data.length - 1; ++pass) {
-            int indexOfMax = 0;
+            int indexOfMax = pass;
 
-            for (int ii = 1; ii < data.length - pass; ++ii) {
+            for (int ii = indexOfMax + 1; ii < data.length; ++ii) {
                 if (data[ii].compareTo(data[indexOfMax]) > 0) {
                     indexOfMax = ii;
                 }
             }
 
-            String tmp = data[0 + pass];
-            data[0 + pass] = data[indexOfMax];
+            String tmp = data[pass];
+            data[pass] = data[indexOfMax];
             data[indexOfMax] = tmp;
 
             System.out.println(Arrays.toString(data));
@@ -42,7 +42,7 @@ public class P7_Dhruva_Krupa_SelectionSort {
         System.out.println("Starting array: " + Arrays.toString(num));
         selectionSort1(num);
 
-        String[] data = {"big", "eat", "steaks", "juicy", "dogs"};
+        String[] data = {"eat", "steaks", "juicy", "huge", "dogs", "big"};
         System.out.println("Starting array: " + Arrays.toString(data));
         selectionSort2(data);
     }
