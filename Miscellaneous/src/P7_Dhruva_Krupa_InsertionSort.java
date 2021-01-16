@@ -21,10 +21,17 @@
  * is not good.
  */
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.io.PrintStream;
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class P7_Dhruva_Krupa_InsertionSort {
+    /**
+     * Sorts array of integers in ascending order using insertion sort algorithm
+     *
+     * @param data Input/output array of integers
+     */
     public static void insertionSort1(int[] data) {
         for (int pass = 1; pass < data.length; ++pass) {
             for (int i = pass; i != 0 && data[i - 1] > data[i]; --i) {
@@ -37,6 +44,11 @@ public class P7_Dhruva_Krupa_InsertionSort {
         }
     }
 
+    /**
+     * Sorts an array of strings in descending order using insertion sort algorithm
+     *
+     * @param data Input/output array of strings
+     */
     public static void insertionSort2(String[] data) {
         for (int pass = data.length - 2; pass >= 0; --pass) {
             for (int i = pass; i < data.length - 1 && data[i].compareTo(data[i + 1]) < 0; ++i) {
@@ -49,6 +61,11 @@ public class P7_Dhruva_Krupa_InsertionSort {
         }
     }
 
+    /**
+     * Sorts list of Yelp reviews in descending order using insertion sort algorithm
+     *
+     * @param data Input/output, list of Yelp ratings
+     */
     public static void insertionSort3(ArrayList<P7_Dhruva_Krupa_YelpRating> data) {
         for (int pass = 1; pass < data.size(); ++pass) {
             for (int i = pass; i != 0 && data.get(i - 1).compareTo(data.get(i)) < 0; --i) {
@@ -62,6 +79,11 @@ public class P7_Dhruva_Krupa_InsertionSort {
     }
 
     public static void main(String[] args) {
+        // Add '-ea' or '-enableassertions' to JVM options to run extensive tests
+        // If command line arguments are provided, first argument is number of test
+        // iterations to run
+        assert runTests(args.length > 0 ? Integer.parseInt(args[1]) : 100);
+
         {
             int[] data = {9, 5, 1, 3, 7, 4};
             System.out.println("Starting Array: " + Arrays.toString(data));
@@ -103,5 +125,95 @@ public class P7_Dhruva_Krupa_InsertionSort {
             }
             System.out.println("Ending Ratings: " + ratings);
         }
+    }
+
+    /**
+     * Run tests with randomized inputs for various insertion sort implementations
+     *
+     * <p>String parameters are constructed from random integers
+     *
+     * @throws AssertionError on test failure
+     */
+    static void testInsertionSort(int iterations) throws AssertionError {
+        Random random = new Random();
+        PrimitiveIterator.OfInt ints = random.ints(Integer.MIN_VALUE, Integer.MAX_VALUE).iterator();
+        PrimitiveIterator.OfDouble doubles = random.doubles(-1, 6).iterator();
+
+        for (int ii = 0; ii < iterations; ++ii) {
+            int[] data = IntStream.range(0, 10).map(i -> ints.nextInt()).toArray();
+            Integer[] orig = Arrays.stream(data).boxed().toArray(Integer[]::new);
+
+            insertionSort1(data);
+
+            Arrays.sort(orig, Comparator.naturalOrder());
+            Integer[] sorted = Arrays.stream(data).boxed().toArray(Integer[]::new);
+            if (!Arrays.equals(orig, sorted)) {
+                throw new AssertionError("insertionSort1 test failed");
+            }
+        }
+
+        for (int ii = 0; ii < iterations; ++ii) {
+            String[] data =
+                    IntStream.range(0, 10)
+                            .mapToObj(i -> String.valueOf(ints.nextInt()))
+                            .toArray(String[]::new);
+            String[] orig = Arrays.copyOf(data, data.length);
+            Arrays.sort(orig, Comparator.reverseOrder());
+
+            insertionSort2(data);
+
+            if (!Arrays.equals(orig, data)) {
+                throw new AssertionError("insertionSort2 test failed");
+            }
+        }
+
+        for (int ii = 0; ii < iterations; ++ii) {
+            ArrayList<P7_Dhruva_Krupa_YelpRating> data =
+                    IntStream.range(0, 10)
+                            .mapToObj(
+                                    i ->
+                                            new P7_Dhruva_Krupa_YelpRating(
+                                                    String.valueOf(i),
+                                                    String.valueOf(i),
+                                                    String.valueOf(i),
+                                                    doubles.next()))
+                            .collect(Collectors.toCollection(ArrayList::new));
+            Double[] orig =
+                    data.stream()
+                            .map(P7_Dhruva_Krupa_YelpRating::getRating)
+                            .sorted(Comparator.reverseOrder())
+                            .toArray(Double[]::new);
+
+            insertionSort3(data);
+
+            Double[] sorted =
+                    data.stream().map(P7_Dhruva_Krupa_YelpRating::getRating).toArray(Double[]::new);
+            if (!Arrays.equals(orig, sorted)) {
+                throw new AssertionError("insertionSort3 test failed");
+            }
+        }
+    }
+
+    /**
+     * Helper method to redirect output to NULL stream to avoid polluting console output
+     *
+     * <p>Sets the default output to NULL stream and restores previous state before return
+     */
+    static boolean runTests(int iterations) {
+        boolean success = false;
+        System.out.println("Running tests...");
+
+        PrintStream stdout = System.out;
+        try {
+            System.setOut(new PrintStream(PrintStream.nullOutputStream()));
+            testInsertionSort(iterations);
+            success = true;
+        } catch (Exception ignored) {
+        } finally {
+            System.setOut(stdout);
+            System.out.println("Test run success=" + success + "\n");
+        }
+
+        return success;
     }
 }
