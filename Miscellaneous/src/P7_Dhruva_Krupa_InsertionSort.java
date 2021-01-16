@@ -38,7 +38,7 @@ public class P7_Dhruva_Krupa_InsertionSort {
     }
 
     public static void insertionSort2(String[] data) {
-        for (int pass = data.length - 2; pass > 0; --pass) {
+        for (int pass = data.length - 2; pass >= 0; --pass) {
             for (int i = pass; i < data.length - 1 && data[i].compareTo(data[i + 1]) < 0; ++i) {
                 String tmp = data[i];
                 data[i] = data[i + 1];
