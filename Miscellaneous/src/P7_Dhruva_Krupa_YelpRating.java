@@ -5,7 +5,7 @@ public class P7_Dhruva_Krupa_YelpRating implements Comparable<P7_Dhruva_Krupa_Ye
     private double rating;
 
     public P7_Dhruva_Krupa_YelpRating(
-            String target, String review, String userName, double rating) {
+            String target, String review, double rating, String userName) {
         this.target = target;
         this.review = review;
         this.userName = userName;
