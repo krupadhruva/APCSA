@@ -1,21 +1,36 @@
+/*
+ * Name: Krupa Dhruva
+ * Date: January 20, 2021
+ * Period: 7
+ * Time Taken: 20 minutes
+ *
+ * Lab Reflection:
+ * While I had already implemented the 3 quadratic sorting methods in previous labs,
+ * tracking and counting steps was something new! At first, I struggled a little
+ * because making sure you have accounted for all the steps in a block of code can
+ * be tedious but as I practiced, I started to get the hang of it. I see where tracking
+ * steps of an algorithm can come in handy, for example, this can be used to compare the
+ * efficiency of different methods with various types of data sets. I enjoyed this lab!
+ */
+
 import java.util.*;
 
 /**
- * Description of the Class
+ * This class contains different implementations of sorting methods and also includes step counting.
  *
- * @author Your Name Here
- * @created Month Day, Year
+ * @author Krupa Dhruva
+ * @created January 20, 2021
  */
 public class P7_Dhruva_Krupa_Sorts {
     private long steps;
 
-    /** Description of Constructor */
+    /** Initializes var 'steps' which is used to track steps taken in each method */
     public P7_Dhruva_Krupa_Sorts() {
         steps = 0;
     }
 
     /**
-     * Description of the Method
+     * Method uses the bubble sort technique to sort contents of array in ascending order
      *
      * @param list reference to an array of integers to be sorted
      */
@@ -41,7 +56,7 @@ public class P7_Dhruva_Krupa_Sorts {
     }
 
     /**
-     * Description of the Method
+     * Method uses the selection sort technique to sort contents of array in ascending order
      *
      * @param list reference to an array of integers to be sorted
      */
@@ -72,7 +87,7 @@ public class P7_Dhruva_Krupa_Sorts {
     }
 
     /**
-     * Description of the Method
+     * Method uses the insertion sort technique to sort contents of array in descending order.
      *
      * @param list reference to an array of integers to be sorted
      */
