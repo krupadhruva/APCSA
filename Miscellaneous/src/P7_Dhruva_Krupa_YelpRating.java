@@ -57,7 +57,7 @@ public class P7_Dhruva_Krupa_YelpRating implements Comparable<P7_Dhruva_Krupa_Ye
     @Override
     public String toString() {
         return String.format(
-                "Target:\t%s%nReview:\t%s%nRating:\t%.1f%nUser:\t%s%n",
+                "Target:\t%s%nReview:\t%s%nRating:\t%f%nUser:\t%s%n",
                 target, review, rating, userName);
     }
 }
