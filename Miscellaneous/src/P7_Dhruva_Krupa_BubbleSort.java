@@ -14,6 +14,7 @@
  * progressive outer loop. Overall, this was a fun lab which helped me
  * strengthen my understanding of the Bubble Sorting technique.
  */
+import java.util.ArrayList;
 import java.util.Arrays;
 
 public class P7_Dhruva_Krupa_BubbleSort {
@@ -57,6 +58,20 @@ public class P7_Dhruva_Krupa_BubbleSort {
         }
     }
 
+    public static void bubbleSort3(ArrayList<Comparable> list) {
+        for (int ii = 0; ii < list.size() - 1; ++ii) {
+            for (int jj = list.size() - 2; jj >= ii; --jj) {
+                if (list.get(jj).compareTo(list.get(jj + 1)) < 0) {
+                    Comparable tmp = list.get(jj);
+                    list.set(jj, list.get(jj + 1));
+                    list.set(jj + 1, tmp);
+                }
+            }
+
+            System.out.println(list);
+        }
+    }
+
     public static void main(String[] args) {
         {
             int[] data = {5, 7, 2, 4, 3, 9};
@@ -70,6 +85,20 @@ public class P7_Dhruva_Krupa_BubbleSort {
             String[] data = {"eat", "steaks", "juicy", "huge", "dogs", "big"};
             System.out.println("Starting array: " + Arrays.toString(data));
             bubbleSort2(data);
+        }
+
+        System.out.println();
+
+        {
+            ArrayList<Comparable> list = new ArrayList<>();
+            list.add("1");
+            list.add("8");
+            list.add("6");
+            list.add("9");
+            list.add("2");
+            list.add("3");
+            System.out.println("Starting Array: " + list);
+            bubbleSort3(list);
         }
     }
 }
