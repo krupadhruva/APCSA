@@ -119,10 +119,20 @@ public class P7_Dhruva_Krupa_Sorts {
      * @param last last index of range of values to be sorted
      */
     private void merge(ArrayList<Comparable> a, int first, int mid, int last) {
-        // replace these lines with your code
-        System.out.println();
-        System.out.println("Merge");
-        System.out.println();
+        for (int ii = first; ii <= mid && mid < last; ++ii) {
+            final Comparable self = a.get(ii);
+            final Comparable other = a.get(mid + 1);
+
+            // If entry in greater than first entry in other half of list,
+            // move the entry in other half above current entry
+            // This will result in advancing cursor and end of top half (mid)
+            // by 1 since we have inserted an entry above the current position
+            if (self.compareTo(other) > 0) {
+                a.remove(mid + 1);
+                a.add(ii, other);
+                ++mid;
+            }
+        }
     }
 
     /**
@@ -133,10 +143,22 @@ public class P7_Dhruva_Krupa_Sorts {
      * @param last ending index of range of values to be sorted
      */
     public void mergeSort(ArrayList<Comparable> a, int first, int last) {
-        // replace these lines with your code
-        System.out.println();
-        System.out.println("Merge Sort");
-        System.out.println();
+        // Boundary condition
+        if (first >= last) {
+            return;
+        }
+
+        // Find the index of mid point
+        int mid = first + (last - first) / 2;
+
+        // Left part of the list
+        mergeSort(a, first, mid);
+
+        // Right part of the list
+        mergeSort(a, mid + 1, last);
+
+        // Merge the 2 halves
+        merge(a, first, mid, last);
     }
 
     /** Accessor method to return the current value of steps */
