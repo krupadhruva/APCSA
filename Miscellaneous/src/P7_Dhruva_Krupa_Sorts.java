@@ -11,6 +11,19 @@
  * be tedious but as I practiced, I started to get the hang of it. I see where tracking
  * steps of an algorithm can come in handy, for example, this can be used to compare the
  * efficiency of different methods with various types of data sets. I enjoyed this lab!
+ *
+ *
+ * Name: Krupa Dhruva
+ * Date: January 27, 2021
+ * Period: 7
+ * Time Taken: 60 minutes
+ *
+ * Lab Reflection for Recursive Merge Sort:
+ * This was a little challenging because my merge sort was implemented without using a
+ * temporary list. Instead of moving the sorted items into a separate temporary list,
+ * I just moved the items within the original list itself. This was little more
+ * challenging than the other sorting methods we had learned but going over the steps
+ * of this technique and walking through it in class was extremely helpful!
  */
 
 import java.util.*;
@@ -119,19 +132,31 @@ public class P7_Dhruva_Krupa_Sorts {
      * @param last last index of range of values to be sorted
      */
     private void merge(ArrayList<Comparable> a, int first, int mid, int last) {
+        setStepCount(getStepCount() + 4);
         for (int ii = first; ii <= mid && mid < last; ++ii) {
+            setStepCount(getStepCount() + 2);
             final Comparable self = a.get(ii);
+
+            setStepCount(getStepCount() + 3);
             final Comparable other = a.get(mid + 1);
 
             // If entry in greater than first entry in other half of list,
             // move the entry in other half above current entry
             // This will result in advancing cursor and end of top half (mid)
             // by 1 since we have inserted an entry above the current position
+            setStepCount(getStepCount() + 2);
             if (self.compareTo(other) > 0) {
+                setStepCount(getStepCount() + 2);
                 a.remove(mid + 1);
+
+                setStepCount(getStepCount() + 1);
                 a.add(ii, other);
+
+                setStepCount(getStepCount() + 1);
                 ++mid;
             }
+
+            setStepCount(getStepCount() + 4);
         }
     }
 
@@ -143,20 +168,25 @@ public class P7_Dhruva_Krupa_Sorts {
      * @param last ending index of range of values to be sorted
      */
     public void mergeSort(ArrayList<Comparable> a, int first, int last) {
+        setStepCount(getStepCount() + 1);
         // Boundary condition
         if (first >= last) {
             return;
         }
 
+        setStepCount(getStepCount() + 4);
         // Find the index of mid point
         int mid = first + (last - first) / 2;
 
+        setStepCount(getStepCount() + 1);
         // Left part of the list
         mergeSort(a, first, mid);
 
+        setStepCount(getStepCount() + 2);
         // Right part of the list
         mergeSort(a, mid + 1, last);
 
+        setStepCount(getStepCount() + 1);
         // Merge the 2 halves
         merge(a, first, mid, last);
     }
