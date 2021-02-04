@@ -1,17 +1,20 @@
 /*
  * Name: Krupa Dhruva
- * Date: January 31, 2021
+ * Date: February 3, 2021
  * Period: 7
- * Time Taken: 45 minutes
+ * Time Taken: 80 minutes
  *
  * Lab Reflection:
- * This lab involved building on topics we had covered earlier. Reading from file
- * using a Scanner and merge sort. Adding error handling when opening a file
- * and on potentially encountering wrong data in the file required additional thought.
- *
- * I now understand the importance of making algorithms work on abstractions like
- * operating on a list of Comparable instead of more concrete types like Integer
- * or String. This makes algorithm implementations more reusable.
+ * Overall, understanding the concept and coding it up wasn't too
+ * difficult but I got stuck when I had to pay attention to the
+ * small details. I had accounted for other out of bounds cases
+ * like if the given value was larger than the 'last' value or if
+ * the entry was smaller than the 'first' value; I did not account
+ * for the values absent from the list that would have fit within
+ * the range of 'first' to 'last'. Other than that minor but
+ * important detail, I had fun implementing this as this was mentally
+ * challenging! I tweaked the testing code a little to test if both,
+ * my recursive and iterative method, were giving the same results.
  */
 
 import java.io.File;
@@ -20,11 +23,13 @@ import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-public class P7_Dhruva_Krupa_StoreDriver {
+public class P7_Dhruva_Krupa_SearchDriver {
     public static void main(String[] args) {
         Store s = new Store("file50.txt");
         s.sort();
         s.displayStore();
+
+        s.testSearch();
     }
 }
 
@@ -200,5 +205,120 @@ class Store {
 
         // Merge the 2 halves
         merge(a, first, mid, last);
+    }
+
+    public void testSearch() {
+        int idToFind;
+        int invReturn;
+        int index;
+        Scanner in = new Scanner(System.in);
+
+        System.out.println("Testing search algorithm\n");
+        do {
+            System.out.println();
+            System.out.print("Enter Id value to search for (-1 to quit) ---> ");
+            idToFind = in.nextInt();
+
+            // Iterative binary search
+            int lindex = index = bsearch(new Item(idToFind, 0));
+
+            // Recursive binary search
+            int rindex = index = bsearch(new Item(idToFind, 0), 0, myStore.size() - 1);
+            System.out.print("Id # " + idToFind);
+
+            // Run with JVM option '-ea'
+            assert lindex == rindex;
+
+            if (index == -1) {
+                System.out.println(" No such part in stock");
+            } else {
+                System.out.println(" Inventory = " + myStore.get(index).getInv());
+            }
+        } while (idToFind >= 0);
+    }
+
+    /**
+     * Searches the myStore ArrayList of Item Objects for the specified item object using a
+     * iterative binary search algorithm
+     *
+     * @param idToSearch Item object containing id value being searched for
+     * @return index of Item if found, -1 if not found
+     */
+    private int bsearch(Item idToSearch) {
+        int first = 0;
+        int last = myStore.size() - 1;
+
+        while (first != last) {
+            int cmpFirst = idToSearch.compareTo(myStore.get(first));
+            if (cmpFirst < 0) {
+                return -1;
+            } else if (cmpFirst == 0) {
+                return first;
+            }
+
+            int cmpLast = idToSearch.compareTo(myStore.get(last));
+            if (cmpLast > 0) {
+                return -1;
+            } else if (cmpLast == 0) {
+                return last;
+            }
+
+            int mid = first + (last - first) / 2;
+
+            // Check if we have any more data to search through
+            if (mid == first) {
+                return -1;
+            }
+
+            int cmpMid = idToSearch.compareTo(myStore.get(mid));
+            if (cmpMid < 0) {
+                last = mid;
+            } else if (cmpMid > 0) {
+                first = mid;
+            } else {
+                return mid;
+            }
+        }
+
+        return -1;
+    }
+
+    /**
+     * Searches the specified ArrayList of Item Objects for the specified id using a recursive
+     * binary search algorithm
+     *
+     * @param idToSearch Id value being search for
+     * @param first Starting index of search range
+     * @param last Ending index of search range
+     * @return index of Item if found, -1 if not found
+     */
+    private int bsearch(Item idToSearch, int first, int last) {
+        int cmpFirst = idToSearch.compareTo(myStore.get(first));
+        if (cmpFirst < 0) {
+            return -1;
+        } else if (cmpFirst == 0) {
+            return first;
+        }
+
+        int cmpLast = idToSearch.compareTo(myStore.get(last));
+        if (cmpLast > 0) {
+            return -1;
+        } else if (cmpLast == 0) {
+            return last;
+        }
+
+        int mid = first + (last - first) / 2;
+
+        // Check if we have any more data to search through
+        if (mid == first) {
+            return -1;
+        }
+
+        int idx = bsearch(idToSearch, first, mid);
+        if (idx == -1) {
+            idx = bsearch(idToSearch, mid, last);
+        }
+
+        return idx;
     }
 }
