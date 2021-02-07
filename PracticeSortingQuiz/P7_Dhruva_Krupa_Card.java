@@ -50,32 +50,18 @@ public class P7_Dhruva_Krupa_Card implements Comparable<P7_Dhruva_Krupa_Card> {
 
     @Override
     public int compareTo(P7_Dhruva_Krupa_Card other) {
-        // The card real value for comparison:
-        // It's value + Value of suite + Value of trump card
-
-        int thisValue = getValue();
-
-        // Since compareTo() returns the difference (can be negative value), we should add
-        // it to any one of the cards. Multiplying by highest value will ensure the weight
-        // for suit is greater than card value
-        thisValue +=
-                (getSuit().compareTo(other.getSuit()) * Math.max(getValue(), other.getValue()));
-
-        int otherValue = other.getValue();
-
-        // The value of trump card should be given highest weight, hence pick the highest value
-        // of the cards so far. Adding it to any of the cards will make it much higher than the
-        // weight of value or suit
-        int trumpValue = thisValue + otherValue;
-
-        if (isTrump()) {
-            thisValue += trumpValue;
+        // Trump card takes precedence in deciding value of the card
+        if (isTrump() ^ other.isTrump()) {
+            return isTrump() ? 1 : -1;
         }
 
-        if (other.isTrump()) {
-            otherValue += trumpValue;
+        // Suit takes next precedence when comparing cards
+        final int suitValue = getSuit().compareTo(other.getSuit());
+        if (suitValue != 0) {
+            return suitValue;
         }
 
-        return thisValue - otherValue;
+        // All else being equal, the actual value of the card decides
+        return getValue() - other.getValue();
     }
 }
