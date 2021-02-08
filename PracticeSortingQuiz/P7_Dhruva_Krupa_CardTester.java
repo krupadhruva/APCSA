@@ -1,4 +1,5 @@
 import java.util.Arrays;
+import java.util.Random;
 
 public class P7_Dhruva_Krupa_CardTester {
 
@@ -11,9 +12,12 @@ public class P7_Dhruva_Krupa_CardTester {
         P7_Dhruva_Krupa_Card[] cards = new P7_Dhruva_Krupa_Card[symbols.length * suits.length];
         int counter = 0;
 
+        Random rand = new Random();
         for (int j = 0; j < suits.length; j++) {
             for (int i = 0; i < symbols.length; i++) {
-                cards[counter] = new P7_Dhruva_Krupa_Card(symbols[i], values[i], suits[j]);
+                cards[counter] =
+                        new P7_Dhruva_Krupa_Card(
+                                symbols[i], values[i], suits[j], rand.nextBoolean());
                 counter++;
             }
         }

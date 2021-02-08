@@ -1,10 +1,32 @@
+/*
+ * Name: Krupa Dhruva
+ * Date: February 07, 2021
+ * Period: 7
+ * Time Taken: 180 minutes
+ *
+ * Lab Reflection:
+ * This is a good exercise in using different sorting algorithms in the same problem.
+ * Understanding the second phase in the middle insertion sort problem was challenging
+ * mainly since I looked at the example and tried to come up with a general solution.
+ * Once I realized that the algorithm is doing insertion sort in growing sub array at
+ * the middle of the main array, it all fell in place.
+ *
+ * The midsertion and vSort requires determining the mid of the array. Since this changes
+ * for array with even or odd number of entries, I extended the tests to randomize the
+ * length of input array by making it odd or even. Similarly, I extended card tester to
+ * incorporate trump card.
+ */
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Random;
 
 public class P7_Dhruva_Krupa_PracticeQuiz {
 
     public static void main(String[] args) {
+        Random rand = new Random();
+        int isOdd = rand.nextInt() % 2;
 
         String[] words = {"abe", "bat", "car", "cat", "dab", "elf", "fig", "get"};
         ArrayList<String> wordList = new ArrayList<String>();
@@ -13,25 +35,33 @@ public class P7_Dhruva_Krupa_PracticeQuiz {
             wordList.add(word);
         }
 
+        if (isOdd == 1) {
+            wordList.remove(0);
+        }
+
         System.out.println("***** Selection Sort *****");
         Collections.shuffle(wordList);
         System.out.println("Before sorting: " + wordList);
         selectionSort(wordList);
         System.out.println("After sorting:  " + wordList);
 
-        int[] intArray = generateRandomIntArray(8);
+        int[] intArray = generateRandomIntArray(8 - isOdd);
 
         System.out.println("\n***** Midsertion Sort *****");
         System.out.println("Before sorting: " + Arrays.toString(intArray));
         midsertionSort(intArray);
         System.out.println("After sorting:  " + Arrays.toString(intArray));
 
-        intArray = generateRandomIntArray(8);
+        intArray = generateRandomIntArray(8 - isOdd);
 
         System.out.println("\n***** V Sort *****");
         System.out.println("Before sorting: " + Arrays.toString(intArray));
         vSort(intArray);
         System.out.println("After sorting:  " + Arrays.toString(intArray));
+
+        System.out.printf(
+                "%n***** Tested with \"%s\" number of entries *****%n",
+                isOdd == 1 ? "odd" : "even");
     }
 
     private static int[] generateRandomIntArray(int length) {
