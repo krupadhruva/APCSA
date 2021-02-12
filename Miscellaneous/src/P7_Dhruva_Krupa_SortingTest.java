@@ -72,14 +72,14 @@ public class P7_Dhruva_Krupa_SortingTest {
                 continue;
             }
 
-            for (int jj = 0; jj < arr.size(); ++jj) {
+            for (int jj = 0; jj < ii; ++jj) {
                 Integer secondNum = arr.get(jj);
                 if (secondNum != null) {
-                    if (secondNum > firstNum) {
-                        arr.set(ii - 1, secondNum);
-                        arr.set(jj, null);
+                    if (firstNum < secondNum) {
+                        arr.remove(ii);
+                        arr.add(jj, firstNum);
+                        break;
                     }
-                    break;
                 }
             }
         }
@@ -108,9 +108,9 @@ class Person implements Comparable<Person> {
     @Override
     public int compareTo(Person other) {
         // Compare based on number of vowels
-        int selfNumVowels = lastName.length() - lastName.replace("aeiouAEIOU", "").length();
+        int selfNumVowels = lastName.length() - lastName.replaceAll("[aeiouAEIOU]", "").length();
         int otherNumVowels =
-                other.lastName.length() - other.lastName.replace("aeiouAEIOU", "").length();
+                other.lastName.length() - other.lastName.replaceAll("[aeiouAEIOU]", "").length();
         if (selfNumVowels != otherNumVowels) {
             return selfNumVowels - otherNumVowels;
         }
