@@ -1,3 +1,23 @@
+/*
+ * Name: Krupa Dhruva
+ * Date: February 14, 2021
+ * Period: 7
+ * Time Taken: 60 minutes
+ *
+ * Lab Reflection:
+ * I was able to use the different algorithms I learned as part of this project. Since I had used Scanner
+ * with a custom pattern for word delimiter, I implemented the solution using that approach first.
+ * However, since regular expressions is not covered in our course, I implemented a function to
+ * sanitize the word after reading from the default Scanner instance.
+ *
+ * Implementing different sorting based on 2 different fields was challenging. I did not want to
+ * created multiple lists and duplicate entries. I took help from my parent to pass the comparator
+ * as an argument to the sort function. I was able to use the same sorting function and specialize
+ * based on comparator function. With this, I am able to use a single list of unique words based
+ * on word search and finally sort based on word frequency to print the final output of top repeating
+ * words in a file.
+ */
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -23,16 +43,18 @@ public class P7_Dhruva_Krupa_CountWordsDriver {
             return count;
         }
 
+        // Compare based on word for detecting and counting duplicates
         public static int wordCompare(Object lhs, Object rhs) {
             assert lhs instanceof WordFrequency && rhs instanceof WordFrequency;
 
             return ((WordFrequency) (lhs)).word.compareTo(((WordFrequency) (rhs)).word);
         }
 
+        // Compare based on word frequency to print top 30 frequent words
         public static int countCompare(Object lhs, Object rhs) {
             assert lhs instanceof WordFrequency && rhs instanceof WordFrequency;
 
-            // We want reverse sorting
+            // We want reverse sorting (descending order)
             int diff = ((WordFrequency) (rhs)).count - ((WordFrequency) (lhs)).count;
             if (diff == 0) {
                 return wordCompare(lhs, rhs);
@@ -58,7 +80,7 @@ public class P7_Dhruva_Krupa_CountWordsDriver {
     }
 
     private int totalWords;
-    private List<WordFrequency> words;
+    private final List<WordFrequency> words;
 
     public P7_Dhruva_Krupa_CountWordsDriver() {
         words = new ArrayList<>();
@@ -131,9 +153,8 @@ public class P7_Dhruva_Krupa_CountWordsDriver {
             entry.increment();
         } else {
             words.add(word);
+            sort(WordFrequency::wordCompare, 0, words.size());
         }
-
-        sort(WordFrequency::wordCompare, 0, words.size());
     }
 
     @Override
@@ -180,10 +201,16 @@ public class P7_Dhruva_Krupa_CountWordsDriver {
         File input = new File(args.length > 1 ? args[0] : "dream.txt");
         Scanner scan = new Scanner(input);
 
+        // Using regex to specify word delimiters
+        // scan.useDelimiter("( - )|([ \t\r\n.,:;!?\"])");
+
         P7_Dhruva_Krupa_CountWordsDriver driver = new P7_Dhruva_Krupa_CountWordsDriver();
 
         while (scan.hasNext()) {
             String word = scan.next();
+
+            // Sanitize word to remove leading/trailing non-letters conforming to problem rules
+            // If we use the regex as word delimiter in Scanner, we do not need this function
             word = sanitizeWord(word);
 
             if (!word.isEmpty()) {
@@ -192,8 +219,10 @@ public class P7_Dhruva_Krupa_CountWordsDriver {
         }
         scan.close();
 
+        // Sort the words based on word frequency in descending order
         driver.sort(WordFrequency::countCompare, 0, driver.words.size());
 
+        // Display the top 30 words based on frequency
         for (int count = 0; count < 30 && count < driver.getWords().size(); ++count) {
             WordFrequency word = driver.getWords().get(count);
             System.out.printf("%5d\t%5d\t%s%n", count + 1, word.count, word.word);
