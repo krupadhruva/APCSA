@@ -1,3 +1,18 @@
+/*
+ * Name: Krupa Dhruva
+ * Date: February 28, 2021
+ * Period: 7
+ * Time Taken: 120 minutes
+ *
+ * Lab Reflection:
+ * I initially wanted to use a padding method so that I didn't
+ * have to deal with out of bounds error but it over complicated
+ * my code. I realized that I could easily validate a move by
+ * using a simple if statement so more than the logic, I spent a
+ * lot of time scrapping my work. Overall, I had fun learning and
+ * implementing Conway's game of life!
+ */
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Arrays;
@@ -161,7 +176,7 @@ public class P7_Dhruva_Krupa_Life {
     }
 
     public static void main(String[] args) throws FileNotFoundException {
-        P7_Dhruva_Krupa_Life life = new P7_Dhruva_Krupa_Life("life100.txt");
+        P7_Dhruva_Krupa_Life life = new P7_Dhruva_Krupa_Life("happy.txt");
 
         // Test error handling
         assert -1 == life.colCount(-10);
