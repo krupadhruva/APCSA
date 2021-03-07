@@ -5,7 +5,9 @@ public class WandOfKeySummoning extends Item {
 
     @Override
     public void use() {
-        System.out.println("Adding a gold key into the room.");
-        getRoom().add(new UselessItem("gold_key", "Gold key"));
+        System.out.println(
+                "Gold sparkles burst from the wand! A gold key appears. This"
+                        + " appears to be the key to the door.");
+        getRoom().add(new UselessItem("gold_key", "Key to freedom"));
     }
 }
