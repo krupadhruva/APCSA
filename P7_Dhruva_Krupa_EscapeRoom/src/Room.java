@@ -248,11 +248,15 @@ public abstract class Room implements CommandHandler {
                     getApp().removeHandler((CommandHandler) item);
                 }
             }
+
+            this.app = null;
         }
-        this.app = app;
-        // add handlers to new app
-        app.addHandler(this);
+
         if (app != null) {
+            // add handlers to new app
+            app.addHandler(this);
+            this.app = app;
+
             for (Item item : items) {
                 if (item instanceof CommandHandler) {
                     getApp().addHandler((CommandHandler) item);
