@@ -48,7 +48,7 @@ public abstract class Recipe {
 
         // Ensure unique items
         HashSet<String> unique = new HashSet<>(items.size());
-        for (var item : items) {
+        for (Item item : items) {
             if (unique.contains(item.getName())) {
                 return false;
             }
@@ -60,7 +60,7 @@ public abstract class Recipe {
             // Find the item preserving the order
             int previousFoundIndex = 0;
 
-            for (var item : items) {
+            for (Item item : items) {
                 int pos = ingredients.indexOf(item.getName());
                 //  No new item should be found before the previously found item
                 // If item is not found, indexOf() returns -1 and that will be less than

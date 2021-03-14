@@ -39,7 +39,7 @@ public class EscapeApp implements CommandHandler {
     public void printHelp() {
         System.out.println(
                 "help prints common commands, but there may be additional secret commands.");
-        for (var handler : handlers) {
+        for (CommandHandler handler : handlers) {
             handler.printHelp();
         }
     }
