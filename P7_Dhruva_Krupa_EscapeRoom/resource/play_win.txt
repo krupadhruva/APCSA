@@ -8,4 +8,5 @@ combine something with nothing
 combine sapphire
 combine sapphire runed_stick
 combine runed_stick sapphire
-use summon_key
+look
+use wand_of_key_summoning

@@ -9,10 +9,12 @@ public class WandOfKeySummoningRecipe extends Recipe {
 
     @Override
     public void combineInRoom(Room room) {
-        room.add(new WandOfKeySummoning("summon_key", "Creates a golden key"));
+        room.add(
+                new WandOfKeySummoning(
+                        "wand_of_key_summoning", "A magical wand that can summon a key"));
         removeIngredientsFromRoom(room);
         System.out.println(
                 "You have combined the material forces to conjure a magic wand to summon the"
-                    + " golden key to freedom!");
+                        + " golden key to freedom!");
     }
 }
