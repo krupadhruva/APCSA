@@ -1,7 +1,7 @@
 import java.time.Duration;
 
 public class ValuedItem extends Item implements Comparable<ValuedItem> {
-    private int value;
+    private Duration value;
     private boolean owned;
 
     /**
@@ -12,19 +12,15 @@ public class ValuedItem extends Item implements Comparable<ValuedItem> {
      * @param value The value of the item, used for barter/exchange
      * @throws IllegalArgumentException if the name contains white space
      */
-    public ValuedItem(String name, String description, int value) {
+    public ValuedItem(String name, String description, long value) {
         super(name, description);
-        this.value = value;
+        this.value = Duration.ofSeconds(value);
         owned = false;
-    }
-
-    public static Duration valueToTime(int value) {
-        return Duration.ofSeconds(value * 60L);
     }
 
     @Override
     public int compareTo(ValuedItem other) {
-        return getValue() - other.getValue();
+        return Long.compare(getValue(), other.getValue());
     }
 
     public void setOwned(boolean owned) {
@@ -35,16 +31,22 @@ public class ValuedItem extends Item implements Comparable<ValuedItem> {
         return owned;
     }
 
-    public int getValue() {
-        return value;
+    public long getValue() {
+        return value.getSeconds();
     }
 
-    public void setValue(int value) {
-        this.value = value;
+    public void setValue(long value) {
+        this.value = Duration.ofSeconds(value);
     }
 
     @Override
     public void use() {
-        System.out.printf("%s item has %d value, can be used to barter%n", getName(), value);
+        System.out.printf(
+                "%s item has %d value, can be used to barter%n", getName(), value.getSeconds());
+    }
+
+    public String getDescription() {
+        return String.format(
+                "%s, has value=%d, owned=%s", super.getDescription(), getValue(), isOwned());
     }
 }

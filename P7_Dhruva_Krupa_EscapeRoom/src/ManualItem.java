@@ -1,7 +1,7 @@
 import java.time.Duration;
 
 public class ManualItem extends TextItem {
-    private long usage = 10;
+    private int usage = 5;
 
     public ManualItem(String name, String description, String text) {
         super(name, description, text);
@@ -12,7 +12,7 @@ public class ManualItem extends TextItem {
         Room room = getRoom();
         if (room instanceof RocketLab) {
             RocketLab lab = (RocketLab) room;
-            lab.addTime(Duration.ofSeconds(usage * 6));
+            lab.addTime(Duration.ofSeconds(lab.getRandom().nextInt(30 * usage)));
 
             if (usage > 1) {
                 --usage;

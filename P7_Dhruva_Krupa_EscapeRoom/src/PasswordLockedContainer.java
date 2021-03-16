@@ -81,4 +81,9 @@ public class PasswordLockedContainer extends Container {
         super.printHelp();
         System.out.println("You can attempt to unlock the " + getName());
     }
+
+    // Helper method to change the password and reuse the container
+    protected void setPassword(String newPassword) {
+        this.password = newPassword;
+    }
 }

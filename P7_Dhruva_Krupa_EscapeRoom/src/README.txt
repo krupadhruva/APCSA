@@ -13,14 +13,12 @@ money. Use time judiciously and save us from extinction.
 Game idea/flow:
 This game is based on escape room theme. However, the game is time based and not turn based. You have limited time to
 complete your mission. Since time is the most critical resource, you can trade time to purchase items needed to build
-a rocket. Items that are hard to discover will have smaller value to purchase. Once you purchase, it value will increase
-so that you can exchange the item for a different item that you need even more.
+a rocket.
 
-Overall, you make time by involving in reading, purchasing and exchanging. Most interactions leads to net positive gain.
-Inactivity is expensive and you will eventually lose the game by running out of time.
+You use items and time to buy or exchange for rocket parts. Once you have all parts required to assemble a rocket, you
+assemble a rocket and escape.
 
 Walk through:
-[TBD] Since I am still evolving the game, I am yet to come up with all details.
 
 You start with allocated time to complete the game. You will have some items scattered in the lab. You will have to
 buy some items, grab some items and build up a reserve. You may not need some of the items, they can be used for barter.
@@ -29,5 +27,16 @@ There are some items that lose value after repeated use. This can impact when yo
 remaining value after an exchange is added back as time with a multiplication factor. Hence, you will make more time
 (and value) by indulging in trading.
 
-Once you successfully assemble a rocket by combining the different parts, you are ready to leave Earth and preserve
-life. Remember to blast off... You can still build a rocket and watch the destruction of earth and rest of humanity.
+There are various opportunities to grab items by unlocking a toolbox. To make it more challenging, we have
+different passwords that randomly rotate.
+
+We have introduced a concept of leased items. You can lease certain items and can use them a fixed number of times.
+After they are used, the item will have to be returned. The value you get by using the item will be more than the value
+for leasing it.
+
+Overall, you make time by involving in reading, purchasing and exchanging. Most interactions leads to net positive gain.
+Inactivity is expensive since time is ticking and you will eventually lose the game by running out of time.
+
+Once you have gained possession of all items to build a rocket, combine the items to assemble a rocket. You are ready
+to leave Earth and preserve life. Remember to blast off... You can still build a rocket and watch the destruction of
+earth and rest of humanity.
