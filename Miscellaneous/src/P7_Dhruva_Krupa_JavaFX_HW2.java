@@ -54,56 +54,97 @@ public class P7_Dhruva_Krupa_JavaFX_HW2 extends Application {
     private static final String IMAGE_URL =
             "https://i.pinimg.com/originals/6f/c6/31/6fc63119e8e3e2c46f0d3b621f38a91b.jpg";
 
+    private Stage stage;
+    private Canvas canvas;
+
+    private boolean loadImageFile() {
+        return loadImageFile(null);
+    }
+
+    private boolean loadImageFile(Image pickedImage) {
+        if (pickedImage == null) {
+            stage.setAlwaysOnTop(false);
+            FileChooser imagePicker = new FileChooser();
+            imagePicker.setTitle("Select image");
+            FileChooser.ExtensionFilter filter =
+                    new FileChooser.ExtensionFilter(
+                            "Image Files", "*.jpg", "*.png", "*.gif", "*.jpeg");
+            imagePicker.getExtensionFilters().add(filter);
+
+            File file = imagePicker.showOpenDialog(stage.getOwner());
+            try {
+                if (file != null) {
+                    pickedImage = new Image(file.toURI().toURL().toString());
+                }
+            } catch (MalformedURLException ex) {
+                popupNotification("Image loading error:" + ex, Duration.seconds(2));
+            } finally {
+                stage.setAlwaysOnTop(true);
+            }
+        }
+
+        if (pickedImage == null || pickedImage.isError()) {
+            return false;
+        }
+
+        canvas.setWidth(pickedImage.getWidth());
+        canvas.setHeight(pickedImage.getHeight());
+        canvas.getGraphicsContext2D().drawImage(pickedImage, 0, 0);
+
+        return true;
+    }
+
+    private void popupNotification(String message, Duration pause) {
+        stage.setAlwaysOnTop(false);
+        Popup popup = new Popup();
+        popup.setAutoFix(true);
+        popup.setAutoHide(true);
+
+        Label label = new Label(message);
+        label.setPadding(new Insets(20));
+        label.setAlignment(Pos.CENTER);
+        label.setTextFill(Color.BLUE);
+        label.setStyle(" -fx-background-color: white;");
+        label.setMinHeight(50);
+        popup.getContent().add(label);
+
+        Point2D pt = canvas.localToScene(0.0, 0.0);
+        popup.setX(stage.getX() + pt.getX() + 100);
+        popup.setY(stage.getY() + pt.getY() + 100);
+
+        if (!popup.isShowing()) {
+            // Hide popup after 2 seconds:
+            PauseTransition delay = new PauseTransition(pause);
+            delay.setOnFinished(e -> popup.hide());
+
+            popup.show(stage);
+            delay.play();
+        }
+    }
+
     @Override
     public void start(Stage rootStage) throws Exception {
         // Create a new stage and set it to modal - we want focus
-        Stage stage = new Stage();
+        stage = new Stage();
+
+        // Draw the image on a canvas - we can redraw when we support actual image editing
+        canvas = new Canvas(500.0, 500.0);
+
         stage.initOwner(rootStage);
         stage.setAlwaysOnTop(true);
         stage.initModality(Modality.WINDOW_MODAL);
 
-        // Load a default image to edit
-        Image image = new Image(IMAGE_URL);
-        double imageWidth = image.getWidth();
-        double imageHeight = image.getWidth();
-
-        // If we fail to load the image, show a helpful message instead of blank
-        if (image.isError()) {
-            imageWidth = 600;
-            imageHeight = 600;
-            String err =
-                    String.format("Failed to load: %s, select image from menu", image.getUrl());
-            image = new Text(err).snapshot(null, null);
-        }
-
-        // Draw the image on a canvas - we can redraw when we support actual image editing
-        final Canvas canvas = new Canvas(imageWidth, imageHeight);
-        canvas.getGraphicsContext2D().drawImage(image, 0, 0);
+        final boolean imageLoaded = loadImageFile(new Image(IMAGE_URL));
 
         // Example menu bar with support to pick image and exit app
         MenuBar menuBar = new MenuBar();
 
-        Menu optionsMenu = new Menu("Options");
+        Menu optionsMenu = new Menu("Editor");
         MenuItem selectItm = new MenuItem("Image path");
         selectItm.setOnAction(
                 event -> {
-                    stage.setAlwaysOnTop(false);
-                    FileChooser imagePicker = new FileChooser();
-                    imagePicker.setTitle("Select image");
-                    FileChooser.ExtensionFilter filter =
-                            new FileChooser.ExtensionFilter(
-                                    "Image Files", "*.jpg", "*.png", "*.gif", "*.jpeg");
-                    imagePicker.getExtensionFilters().add(filter);
-                    try {
-                        File file = imagePicker.showOpenDialog(stage.getOwner());
-                        Image pickedImage = new Image(file.toURI().toURL().toString());
-                        canvas.getGraphicsContext2D().drawImage(pickedImage, 0, 0);
-                        canvas.setWidth(pickedImage.getWidth());
-                        canvas.setHeight(pickedImage.getHeight());
-                    } catch (MalformedURLException e) {
-                        System.out.println("Image loading error:" + e);
-                    } finally {
-                        stage.setAlwaysOnTop(true);
+                    if (!loadImageFile()) {
+                        popupNotification("Failed to load image", Duration.seconds(2));
                     }
                 });
 
@@ -136,9 +177,10 @@ public class P7_Dhruva_Krupa_JavaFX_HW2 extends Application {
         root.setBottom(hbBottom);
 
         // Create scene since we have the image to set the size of scene
-        Scene scene = new Scene(root, imageWidth, imageHeight);
+        Scene scene = new Scene(root, canvas.getWidth(), canvas.getHeight() + 150);
         stage.setTitle("Image Editor");
         stage.setScene(scene);
+        stage.sizeToScene();
 
         // Load image for editing
         {
@@ -217,38 +259,17 @@ public class P7_Dhruva_Krupa_JavaFX_HW2 extends Application {
             applyBtn.setPadding(new Insets(5));
             applyBtn.setText("Apply");
             applyBtn.setOnAction(
-                    event -> {
-                        stage.setAlwaysOnTop(false);
-                        Popup popup = new Popup();
-                        popup.setAutoFix(true);
-                        popup.setAutoHide(true);
-
-                        Label label = new Label("Applied changes");
-                        label.setPadding(new Insets(20));
-                        label.setAlignment(Pos.CENTER);
-                        label.setTextFill(Color.BLUE);
-                        label.setStyle(" -fx-background-color: white;");
-                        label.setMinHeight(50);
-                        popup.getContent().add(label);
-
-                        Point2D pt = canvas.localToScene(0.0, 0.0);
-                        popup.setX(stage.getX() + pt.getX() + 100);
-                        popup.setY(stage.getY() + pt.getY() + 100);
-
-                        if (!popup.isShowing()) {
-                            // Hide popup after 2 seconds:
-                            PauseTransition delay = new PauseTransition(Duration.seconds(2));
-                            delay.setOnFinished(e -> popup.hide());
-
-                            popup.show(stage);
-                            delay.play();
-                        }
-                    });
+                    event -> popupNotification("Applied changes", Duration.seconds(2)));
 
             hbBottom.getChildren().addAll(cancelBtn, vSpace, applyBtn);
         }
 
-        stage.showAndWait();
+        stage.show();
+
+        // Show hint to open image for editing
+        if (!imageLoaded) {
+            popupNotification("Open image to edit", Duration.seconds(5));
+        }
     }
 
     public static void main(String[] args) {
