@@ -34,6 +34,9 @@ import javafx.scene.control.RadioButton;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Separator;
 import javafx.scene.control.Slider;
+import javafx.scene.effect.ColorAdjust;
+import javafx.scene.effect.GaussianBlur;
+import javafx.scene.effect.SepiaTone;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
@@ -53,9 +56,25 @@ import java.net.MalformedURLException;
 public class P7_Dhruva_Krupa_JavaFX_HW2 extends Application {
     private static final String IMAGE_URL =
             "https://i.pinimg.com/originals/6f/c6/31/6fc63119e8e3e2c46f0d3b621f38a91b.jpg";
+    private static final ImageEffect[] IMAGE_EFFECTS =
+            new ImageEffect[] {
+                new ImageEffect("Blur", 0.0),
+                new ImageEffect("Light", 0.0),
+                new ImageEffect("Sepia", 0.0)
+            };
 
     private Stage stage;
     private Canvas canvas;
+
+    private static class ImageEffect {
+        ImageEffect(String name, Double value) {
+            this.name = name;
+            this.value = value;
+        }
+
+        public String name;
+        public Double value;
+    }
 
     private boolean loadImageFile() {
         return loadImageFile(null);
@@ -119,6 +138,26 @@ public class P7_Dhruva_Krupa_JavaFX_HW2 extends Application {
 
             popup.show(stage);
             delay.play();
+        }
+    }
+
+    private void applyImageEffects(int index, Slider controlSldr, Label controlLbl) {
+        ImageEffect effect = IMAGE_EFFECTS[index];
+        controlLbl.setText(String.format("%.2f", controlSldr.getValue()));
+        IMAGE_EFFECTS[index].value = controlSldr.getValue();
+
+        switch (effect.name) {
+            case "Blur":
+                canvas.setEffect(new GaussianBlur(effect.value / 10.0));
+                break;
+            case "Light":
+                ColorAdjust br = new ColorAdjust();
+                br.setBrightness(effect.value / 100.0);
+                canvas.setEffect(br);
+                break;
+            case "Sepia":
+                canvas.setEffect(new SepiaTone(effect.value / 100.0));
+                break;
         }
     }
 
@@ -230,18 +269,49 @@ public class P7_Dhruva_Krupa_JavaFX_HW2 extends Application {
                 gridPane.add(effectsTxt, 0, rows);
 
                 ComboBox<String> effectsCbox = new ComboBox<>();
-                effectsCbox.getItems().addAll("Sepia", "Blur", "Light");
-                effectsCbox.getSelectionModel().selectFirst();
+                for (ImageEffect itm : IMAGE_EFFECTS) {
+                    effectsCbox.getItems().add(itm.name);
+                }
                 gridPane.add(effectsCbox, 1, rows);
+                effectsCbox.getSelectionModel().selectFirst();
 
                 Separator vs = new Separator(Orientation.VERTICAL);
+                gridPane.add(vs, 2, rows);
                 vs.setVisible(false);
                 vs.setPadding(new Insets(10));
-                gridPane.add(vs, 2, rows);
 
                 Slider controlSldr = new Slider(0, 1, 0);
-                controlSldr.setPadding(new Insets(2));
                 gridPane.add(controlSldr, 3, rows);
+                controlSldr.setPadding(new Insets(2));
+                controlSldr.setMin(0.0);
+                controlSldr.setMax(100.0);
+                controlSldr.setSnapToTicks(true);
+                controlSldr.setShowTickLabels(true);
+
+                Separator vs1 = new Separator(Orientation.VERTICAL);
+                gridPane.add(vs1, 4, rows);
+                vs1.setVisible(false);
+                vs1.setPadding(new Insets(10));
+
+                Label controlLbl = new Label();
+                gridPane.add(controlLbl, 5, rows);
+                controlLbl.setPadding(new Insets(10));
+                controlLbl.setText("0.0");
+
+                effectsCbox.setOnAction(
+                        event -> {
+                            int index = effectsCbox.getSelectionModel().getSelectedIndex();
+                            double value = IMAGE_EFFECTS[index].value;
+                            controlSldr.setValue(value);
+                            applyImageEffects(index, controlSldr, controlLbl);
+                        });
+
+                controlSldr.setOnMouseDragged(
+                        event ->
+                                applyImageEffects(
+                                        effectsCbox.getSelectionModel().getSelectedIndex(),
+                                        controlSldr,
+                                        controlLbl));
             }
         }
 
@@ -250,13 +320,14 @@ public class P7_Dhruva_Krupa_JavaFX_HW2 extends Application {
             Button cancelBtn = new Button();
             cancelBtn.setPadding(new Insets(5));
             cancelBtn.setText("Cancel");
-            cancelBtn.setOnAction(event -> stage.close());
+            cancelBtn.setOnAction(event -> exitItm.fire());
 
             Separator vSpace = new Separator(Orientation.VERTICAL);
             vSpace.setVisible(false);
 
             Button applyBtn = new Button();
             applyBtn.setPadding(new Insets(5));
+
             applyBtn.setText("Apply");
             applyBtn.setOnAction(
                     event -> popupNotification("Applied changes", Duration.seconds(2)));
