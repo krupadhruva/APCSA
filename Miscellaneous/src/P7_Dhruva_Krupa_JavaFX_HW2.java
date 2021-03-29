@@ -7,29 +7,45 @@
  * Lab Reflection:
  * JavaFx has a very rich collection of building blocks for rich graphic user interfaces.
  * Exploring the different containers, controls other widgets took a lot of time. I still
- * have to explore lot more.
+ * have to explore lot more. I referred to online documentation and samples from Stackoverflow.
+ *
  * As a digital photo editing enthusiast, I decided to explore building a simple image editor.
  * Positioning the various controls is very time consuming. I would like to explore if there
  * are easier ways to build a basic layout. Overall, I found this interesting and would like
  * to continue and explore image editing through this app.
  */
 
+import javafx.animation.PauseTransition;
 import javafx.application.Application;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
+import javafx.geometry.Point2D;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Separator;
+import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 import java.io.File;
 import java.net.MalformedURLException;
@@ -200,6 +216,34 @@ public class P7_Dhruva_Krupa_JavaFX_HW2 extends Application {
             Button applyBtn = new Button();
             applyBtn.setPadding(new Insets(5));
             applyBtn.setText("Apply");
+            applyBtn.setOnAction(
+                    event -> {
+                        stage.setAlwaysOnTop(false);
+                        Popup popup = new Popup();
+                        popup.setAutoFix(true);
+                        popup.setAutoHide(true);
+
+                        Label label = new Label("Applied changes");
+                        label.setPadding(new Insets(20));
+                        label.setAlignment(Pos.CENTER);
+                        label.setTextFill(Color.BLUE);
+                        label.setStyle(" -fx-background-color: white;");
+                        label.setMinHeight(50);
+                        popup.getContent().add(label);
+
+                        Point2D pt = canvas.localToScene(0.0, 0.0);
+                        popup.setX(stage.getX() + pt.getX() + 100);
+                        popup.setY(stage.getY() + pt.getY() + 100);
+
+                        if (!popup.isShowing()) {
+                            // Hide popup after 2 seconds:
+                            PauseTransition delay = new PauseTransition(Duration.seconds(2));
+                            delay.setOnFinished(e -> popup.hide());
+
+                            popup.show(stage);
+                            delay.play();
+                        }
+                    });
 
             hbBottom.getChildren().addAll(cancelBtn, vSpace, applyBtn);
         }
