@@ -24,9 +24,33 @@ public class P7_Dhruva_Krupa_LifeModel {
     private final int[] colCounts;
     private int totalCount;
 
-    public P7_Dhruva_Krupa_LifeModel(String fileName) throws FileNotFoundException {
+    public P7_Dhruva_Krupa_LifeModel(Boolean[][] grid, int generation) {
         gameOver = false;
+        totalCount = 0;
+        this.board = grid.clone();
+        this.generation = generation;
 
+        rowCounts = new int[board.length];
+        colCounts = new int[board[0].length];
+        Arrays.fill(rowCounts, 0);
+        Arrays.fill(colCounts, 0);
+
+        for (int row = 0; row < board.length; ++row) {
+            for (int col = 0; col < board[0].length; ++col) {
+                if (board[row][col]) {
+                    ++rowCounts[row];
+                    ++colCounts[row];
+                    ++totalCount;
+                }
+            }
+        }
+    }
+
+    public P7_Dhruva_Krupa_LifeModel(String fileName) throws FileNotFoundException {
+        this(makeBoard(fileName), 0);
+    }
+
+    private static Boolean[][] makeBoard(String fileName) {
         // Read file and get rows & columns
         try (Scanner scan = new Scanner(new File(fileName))) {
             if (!scan.hasNextInt()) {
@@ -39,20 +63,10 @@ public class P7_Dhruva_Krupa_LifeModel {
             }
             int cols = scan.nextInt();
 
-            board = new Boolean[rows][cols];
+            Boolean[][] board = new Boolean[rows][cols];
             for (Boolean[] booleans : board) {
                 Arrays.fill(booleans, false);
             }
-
-            rowCounts = new int[rows];
-            Arrays.fill(rowCounts, 0);
-            colCounts = new int[cols];
-            Arrays.fill(colCounts, 0);
-
-            totalCount = 0;
-
-            // Initial generation count
-            generation = 0;
 
             // Populate the board with values read from file
             while (scan.hasNextInt()) {
@@ -64,10 +78,11 @@ public class P7_Dhruva_Krupa_LifeModel {
                 int col = scan.nextInt();
 
                 board[row][col] = true;
-                ++rowCounts[row];
-                ++colCounts[col];
-                ++totalCount;
             }
+
+            return board;
+        } catch (FileNotFoundException | InputMismatchException ex) {
+            return new Boolean[0][0];
         }
     }
 

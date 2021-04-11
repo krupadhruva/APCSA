@@ -8,6 +8,10 @@
  * This was mostly refactoring and integrating with game of life.
  * I would like to learn how to resize the main window when the
  * number of cells in a grid changes.
+ *
+ * Additional features:
+ *  - Allows use to build their own life grid by selecting
+ *  - Updating running game with additional modification to cells
  */
 
 import javafx.application.Application;
@@ -22,7 +26,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
 import javafx.scene.control.Slider;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.stage.FileChooser;
@@ -36,6 +42,48 @@ public class P7_Dhruva_Krupa_LifeGUI_1 extends Application {
     private P7_Dhruva_Krupa_LifeModel lifeModel;
     private GridModel<Boolean> gridModel;
     private BooleanGridPane gamePane;
+    private Slider controlSldr;
+
+    /** Handler to flip neighboring cell colors when a cell in grid is clicked */
+    static class GamePaneHandler implements EventHandler<MouseEvent> {
+        private final P7_Dhruva_Krupa_LifeGUI_1 lifeApp;
+
+        GamePaneHandler(P7_Dhruva_Krupa_LifeGUI_1 app) {
+            this.lifeApp = app;
+        }
+
+        @Override
+        public void handle(MouseEvent event) {
+            int row = lifeApp.gamePane.rowForYPos(event.getY());
+            int col = lifeApp.gamePane.colForXPos(event.getX());
+
+            for (int rowIdx = row - 1; rowIdx <= row + 1; ++rowIdx) {
+                for (int colIdx = col - 1; colIdx <= col + 1; ++colIdx) {
+                    if (!(rowIdx == row && colIdx == col)) {
+                        try {
+                            Boolean currVal = lifeApp.gridModel.getValueAt(rowIdx, colIdx);
+                            lifeApp.gridModel.setValueAt(rowIdx, colIdx, !currVal);
+                            lifeApp.gamePane.cellChanged(rowIdx, colIdx, currVal, !currVal);
+                        } catch (IndexOutOfBoundsException ignored) {
+                        }
+                    }
+                }
+            }
+
+            Boolean[][] grid =
+                    new Boolean[lifeApp.gridModel.getNumRows()][lifeApp.gridModel.getNumCols()];
+            for (int rid = 0; rid < grid.length; ++rid) {
+                for (int cid = 0; cid < grid[rid].length; ++cid) {
+                    grid[rid][cid] = lifeApp.gridModel.getValueAt(rid, cid);
+                }
+            }
+
+            lifeApp.setLifeModel(
+                    new P7_Dhruva_Krupa_LifeModel(
+                            grid,
+                            lifeApp.lifeModel == null ? 0 : lifeApp.lifeModel.getGeneration()));
+        }
+    }
 
     /** Handler to zoom the grid when slider is moved */
     static class SliderHandler implements ChangeListener<Number> {
@@ -78,7 +126,10 @@ public class P7_Dhruva_Krupa_LifeGUI_1 extends Application {
             try {
                 final P7_Dhruva_Krupa_LifeModel lifeModel =
                         new P7_Dhruva_Krupa_LifeModel(file.getAbsolutePath());
-                lifeApp.gamePane.setTileSize(600.0 / lifeModel.getBoard().length);
+                double width = lifeApp.gridModel.getNumCols() * lifeApp.gamePane.getTileSize();
+                double tileSize = width / lifeModel.getBoard().length;
+                lifeApp.gamePane.setTileSize(tileSize);
+                lifeApp.controlSldr.setValue(tileSize);
                 lifeApp.setLifeModel(lifeModel);
             } catch (FileNotFoundException ignored) {
             }
@@ -103,8 +154,7 @@ public class P7_Dhruva_Krupa_LifeGUI_1 extends Application {
                 Arrays.fill(row, false);
             }
 
-            life.gridModel.setGrid(grid);
-            life.gamePane.setModel(life.gridModel);
+            life.setLifeModel(new P7_Dhruva_Krupa_LifeModel(grid, 0));
             label.setText(String.format("%3d", 0));
         }
     }
@@ -121,7 +171,7 @@ public class P7_Dhruva_Krupa_LifeGUI_1 extends Application {
 
         @Override
         public void handle(ActionEvent event) {
-            if (life.lifeModel.isGameOver()) {
+            if (life.lifeModel == null || life.lifeModel.isGameOver()) {
                 return;
             }
 
@@ -140,7 +190,7 @@ public class P7_Dhruva_Krupa_LifeGUI_1 extends Application {
 
     @Override
     public void start(Stage stage) {
-        final Boolean[][] grid = new Boolean[5][5];
+        final Boolean[][] grid = new Boolean[8][8];
         for (Boolean[] row : grid) {
             Arrays.fill(row, false);
         }
@@ -150,54 +200,71 @@ public class P7_Dhruva_Krupa_LifeGUI_1 extends Application {
 
         gamePane.setTileSize(10);
         gamePane.setModel(gridModel);
-        // gamePane.setOnMouseClicked(new GamePaneHandler(gamePane, gridModel));
+        gamePane.setOnMouseClicked(new GamePaneHandler(this));
 
         // Horizontal bottom panel
         HBox hbBottom = new HBox();
+        hbBottom.setFillHeight(true);
+        HBox.setHgrow(hbBottom, Priority.ALWAYS);
+
+        GridPane gpBottom = new GridPane();
+        hbBottom.getChildren().add(gpBottom);
+
+        final Insets padding = new Insets(5);
         {
             Label genLbl = new Label();
-            genLbl.setPadding(new Insets(10));
+            genLbl.setPadding(padding);
             genLbl.setText(String.format("%3d", 0));
 
             Button loadBtn = new Button();
-            loadBtn.setPadding(new Insets(5));
+            loadBtn.setPadding(padding);
             loadBtn.setText("Load");
             loadBtn.setOnAction(new LoadHandler(this));
+            gpBottom.add(loadBtn, 0, 1);
 
-            Separator vSpace = new Separator(Orientation.VERTICAL);
-            vSpace.setVisible(false);
+            Separator vs0 = new Separator(Orientation.VERTICAL);
+            vs0.setVisible(false);
+            gpBottom.add(vs0, 1, 1);
 
             Button clearBtn = new Button();
-            clearBtn.setPadding(new Insets(5));
+            clearBtn.setPadding(padding);
             clearBtn.setText("Clear");
             clearBtn.setOnAction(new ClearHandler(this, genLbl));
-
-            Button nextBtn = new Button();
-            nextBtn.setPadding(new Insets(5));
-            nextBtn.setText("Next Generation");
-            nextBtn.setOnAction(new NextHandler(this, genLbl));
-
-            Separator vs = new Separator(Orientation.VERTICAL);
-            vs.setVisible(false);
-            vs.setPadding(new Insets(10));
+            gpBottom.add(clearBtn, 2, 1);
 
             Separator vs1 = new Separator(Orientation.VERTICAL);
             vs1.setVisible(false);
-            vs1.setPadding(new Insets(10));
+            gpBottom.add(vs1, 3, 1);
 
-            Slider controlSldr = new Slider(0.0, 100.0, 0);
-            controlSldr.setPadding(new Insets(2));
+            Button nextBtn = new Button();
+            nextBtn.setPadding(padding);
+            nextBtn.setText("Next Generation");
+            nextBtn.setOnAction(new NextHandler(this, genLbl));
+            gpBottom.add(nextBtn, 4, 1);
+
+            Separator vs2 = new Separator(Orientation.VERTICAL);
+            vs2.setVisible(false);
+            gpBottom.add(vs2, 5, 1);
+
+            gpBottom.add(genLbl, 6, 1);
+
+            Separator vs3 = new Separator(Orientation.VERTICAL);
+            vs3.setVisible(false);
+            gpBottom.add(vs3, 7, 1);
+
+            controlSldr = new Slider(0.0, 100.0, 0.0);
+            controlSldr.setMaxWidth(Double.MAX_VALUE);
+            controlSldr.setPadding(padding);
             controlSldr.setMin(0.0);
             controlSldr.setMax(100.0);
-            controlSldr.setMinorTickCount(1);
+            controlSldr.setMinorTickCount(10);
             controlSldr.setShowTickLabels(true);
             controlSldr.setShowTickMarks(true);
             controlSldr.valueProperty().addListener(new SliderHandler(gamePane));
             controlSldr.setValue(60);
-
-            hbBottom.getChildren()
-                    .addAll(loadBtn, vSpace, clearBtn, nextBtn, vs, genLbl, vs1, controlSldr);
             HBox.setHgrow(controlSldr, Priority.ALWAYS);
+
+            hbBottom.getChildren().add(controlSldr);
         }
 
         // Top most pane containing rest of the layouts
