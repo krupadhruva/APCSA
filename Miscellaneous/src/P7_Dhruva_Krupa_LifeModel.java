@@ -148,12 +148,11 @@ public class P7_Dhruva_Krupa_LifeModel {
             }
         }
 
-        ++generation;
-
         // Transition to the next generation
         for (int row = 0; row < newBoard.length; ++row) {
             if (Arrays.compare(newBoard[row], board[row]) != 0) {
                 board = newBoard;
+                ++generation;
                 return;
             }
         }

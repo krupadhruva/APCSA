@@ -19,12 +19,12 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
-import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.Separator;
 import javafx.scene.control.Slider;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
@@ -178,7 +178,7 @@ public class P7_Dhruva_Krupa_LifeGUI_1 extends Application {
             life.lifeModel.nextGeneration();
             life.gridModel = new GridModel<>(life.lifeModel.getBoard());
             life.gamePane.setModel(life.gridModel);
-            label.setText(String.format("%3d", life.lifeModel.getGeneration()));
+            label.setText(String.format("%d", life.lifeModel.getGeneration()));
         }
     }
 
@@ -208,13 +208,16 @@ public class P7_Dhruva_Krupa_LifeGUI_1 extends Application {
         HBox.setHgrow(hbBottom, Priority.ALWAYS);
 
         GridPane gpBottom = new GridPane();
+        gpBottom.setHgap(10);
+        gpBottom.setVgap(10);
+        gpBottom.setAlignment(Pos.BOTTOM_CENTER);
         hbBottom.getChildren().add(gpBottom);
 
         final Insets padding = new Insets(5);
         {
             Label genLbl = new Label();
             genLbl.setPadding(padding);
-            genLbl.setText(String.format("%3d", 0));
+            genLbl.setText(String.format("%d", 0));
 
             Button loadBtn = new Button();
             loadBtn.setPadding(padding);
@@ -222,35 +225,23 @@ public class P7_Dhruva_Krupa_LifeGUI_1 extends Application {
             loadBtn.setOnAction(new LoadHandler(this));
             gpBottom.add(loadBtn, 0, 1);
 
-            Separator vs0 = new Separator(Orientation.VERTICAL);
-            vs0.setVisible(false);
-            gpBottom.add(vs0, 1, 1);
-
             Button clearBtn = new Button();
             clearBtn.setPadding(padding);
             clearBtn.setText("Clear");
             clearBtn.setOnAction(new ClearHandler(this, genLbl));
-            gpBottom.add(clearBtn, 2, 1);
-
-            Separator vs1 = new Separator(Orientation.VERTICAL);
-            vs1.setVisible(false);
-            gpBottom.add(vs1, 3, 1);
+            gpBottom.add(clearBtn, 1, 1);
 
             Button nextBtn = new Button();
             nextBtn.setPadding(padding);
             nextBtn.setText("Next Generation");
             nextBtn.setOnAction(new NextHandler(this, genLbl));
-            gpBottom.add(nextBtn, 4, 1);
+            gpBottom.add(nextBtn, 2, 1);
 
-            Separator vs2 = new Separator(Orientation.VERTICAL);
-            vs2.setVisible(false);
-            gpBottom.add(vs2, 5, 1);
+            Label genTitleLbl = new Label("Generation");
+            gpBottom.add(genTitleLbl, 3, 0);
 
-            gpBottom.add(genLbl, 6, 1);
-
-            Separator vs3 = new Separator(Orientation.VERTICAL);
-            vs3.setVisible(false);
-            gpBottom.add(vs3, 7, 1);
+            GridPane.setHalignment(genLbl, HPos.CENTER);
+            gpBottom.add(genLbl, 3, 1);
 
             controlSldr = new Slider(0.0, 100.0, 0.0);
             controlSldr.setMaxWidth(Double.MAX_VALUE);
@@ -264,6 +255,7 @@ public class P7_Dhruva_Krupa_LifeGUI_1 extends Application {
             controlSldr.setValue(60);
             HBox.setHgrow(controlSldr, Priority.ALWAYS);
 
+            hbBottom.setAlignment(Pos.BOTTOM_RIGHT);
             hbBottom.getChildren().add(controlSldr);
         }
 
@@ -273,13 +265,18 @@ public class P7_Dhruva_Krupa_LifeGUI_1 extends Application {
         root.setCenter(gamePane);
         root.setBottom(hbBottom);
 
+        //        VBox root = new VBox();
+        //        root.setPadding(padding);
+        //        root.setFillWidth(true);
+        //        root.getChildren().addAll(gamePane, hbBottom);
+
         // Create scene since we have the grid to set the size of scene
         final Scene scene =
                 new Scene(
                         root,
                         // TODO: Need to understand how to get the horizontal box height & width
-                        gridModel.getNumCols() * gamePane.cellAtGridCoords(0, 0).getHeight() + 150,
-                        gridModel.getNumRows() * gamePane.cellAtGridCoords(0, 0).getHeight() + 200);
+                        gamePane.getLayoutBounds().getWidth() + gamePane.getTileSize() / 2,
+                        gamePane.getLayoutBounds().getHeight() + gamePane.getTileSize() * 2);
         stage.setTitle("Life GUI 1.0");
         stage.setScene(scene);
         stage.sizeToScene();
