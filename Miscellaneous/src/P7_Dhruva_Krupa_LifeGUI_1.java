@@ -2,12 +2,13 @@
  * Name: Krupa Dhruva
  * Date: April 10, 2021
  * Period: 7
- * Time Taken: 90 minutes
+ * Time Taken: 120 minutes
  *
  * Lab Reflection:
  * This was mostly refactoring and integrating with game of life.
  * I would like to learn how to resize the main window when the
- * number of cells in a grid changes.
+ * number of cells in a grid changes. Refactored model to extend
+ * GridModel and reuse the boolean grid.
  *
  * Additional features:
  *  - Allows use to build their own life grid by selecting
@@ -39,10 +40,21 @@ import java.io.FileNotFoundException;
 import java.util.Arrays;
 
 public class P7_Dhruva_Krupa_LifeGUI_1 extends Application {
-    private P7_Dhruva_Krupa_LifeModel lifeModel;
-    private GridModel<Boolean> gridModel;
-    private BooleanGridPane gamePane;
-    private Slider controlSldr;
+    private BooleanGridPaneExtended gamePane;
+
+    /** Helper class to get the underlying grid model from a grid pane */
+    static class BooleanGridPaneExtended extends BooleanGridPane {
+        private P7_Dhruva_Krupa_LifeModel gridModel;
+
+        public void setModel(P7_Dhruva_Krupa_LifeModel model) {
+            this.gridModel = model;
+            super.setModel(this.gridModel);
+        }
+
+        public P7_Dhruva_Krupa_LifeModel getModel() {
+            return this.gridModel;
+        }
+    }
 
     /** Handler to flip selected cell color when a cell in grid is clicked */
     static class GamePaneHandler implements EventHandler<MouseEvent> {
@@ -57,22 +69,9 @@ public class P7_Dhruva_Krupa_LifeGUI_1 extends Application {
             int row = lifeApp.gamePane.rowForYPos(event.getY());
             int col = lifeApp.gamePane.colForXPos(event.getX());
 
-            Boolean currVal = lifeApp.gridModel.getValueAt(row, col);
-            lifeApp.gridModel.setValueAt(row, col, !currVal);
-            lifeApp.gamePane.cellChanged(row, col, currVal, !currVal);
-
-            Boolean[][] grid =
-                    new Boolean[lifeApp.gridModel.getNumRows()][lifeApp.gridModel.getNumCols()];
-            for (int rid = 0; rid < grid.length; ++rid) {
-                for (int cid = 0; cid < grid[rid].length; ++cid) {
-                    grid[rid][cid] = lifeApp.gridModel.getValueAt(rid, cid);
-                }
-            }
-
-            lifeApp.setLifeModel(
-                    new P7_Dhruva_Krupa_LifeModel(
-                            grid,
-                            lifeApp.lifeModel == null ? 0 : lifeApp.lifeModel.getGeneration()));
+            Boolean currVal = lifeApp.gamePane.getModel().getValueAt(row, col);
+            lifeApp.gamePane.getModel().setValueAt(row, col, !currVal);
+            lifeApp.gamePane.resetCells();
         }
     }
 
@@ -94,9 +93,11 @@ public class P7_Dhruva_Krupa_LifeGUI_1 extends Application {
     /** Handler to load grid data from a file when Load button is pressed */
     static class LoadHandler implements EventHandler<ActionEvent> {
         private final P7_Dhruva_Krupa_LifeGUI_1 lifeApp;
+        private final Slider controlSldr;
 
-        LoadHandler(P7_Dhruva_Krupa_LifeGUI_1 lifeApp) {
+        LoadHandler(P7_Dhruva_Krupa_LifeGUI_1 lifeApp, Slider slider) {
             this.lifeApp = lifeApp;
+            this.controlSldr = slider;
         }
 
         @Override
@@ -115,13 +116,15 @@ public class P7_Dhruva_Krupa_LifeGUI_1 extends Application {
             }
 
             try {
-                final P7_Dhruva_Krupa_LifeModel lifeModel =
-                        new P7_Dhruva_Krupa_LifeModel(file.getAbsolutePath());
-                double width = lifeApp.gridModel.getNumCols() * lifeApp.gamePane.getTileSize();
-                double tileSize = width / lifeModel.getBoard().length;
+                // Get existing width of game pane. We can compute new tile size if columsn change
+                // and ensure it fits the existing window size
+                final double width =
+                        lifeApp.gamePane.getModel().getNumCols() * lifeApp.gamePane.getTileSize();
+
+                lifeApp.gamePane.setModel(new P7_Dhruva_Krupa_LifeModel(file.getAbsolutePath()));
+                final double tileSize = width / lifeApp.gamePane.getModel().getNumCols();
                 lifeApp.gamePane.setTileSize(tileSize);
-                lifeApp.controlSldr.setValue(tileSize);
-                lifeApp.setLifeModel(lifeModel);
+                controlSldr.setValue(tileSize);
             } catch (FileNotFoundException ignored) {
             }
         }
@@ -129,54 +132,51 @@ public class P7_Dhruva_Krupa_LifeGUI_1 extends Application {
 
     /** Handler to clear the grid when Clear button is clicked */
     static class ClearHandler implements EventHandler<ActionEvent> {
-        private final P7_Dhruva_Krupa_LifeGUI_1 life;
+        private final P7_Dhruva_Krupa_LifeGUI_1 lifeApp;
         private final Label label;
 
         ClearHandler(P7_Dhruva_Krupa_LifeGUI_1 life, Label label) {
-            this.life = life;
+            this.lifeApp = life;
             this.label = label;
         }
 
         @Override
         public void handle(ActionEvent event) {
-            final Boolean[][] grid =
-                    new Boolean[life.gridModel.getNumRows()][life.gridModel.getNumCols()];
-            for (Boolean[] row : grid) {
-                Arrays.fill(row, false);
+            final GridModel<Boolean> model = lifeApp.gamePane.getModel();
+            for (int row = 0; row < model.getNumRows(); ++row) {
+                for (int col = 0; col < model.getNumCols(); ++col) {
+                    model.setValueAt(row, col, false);
+                }
             }
 
-            life.setLifeModel(new P7_Dhruva_Krupa_LifeModel(grid, 0));
+            lifeApp.gamePane.resetCells();
             label.setText(String.format("%3d", 0));
         }
     }
 
     /** Handler to show next generation when Next button is clicked */
     static class NextHandler implements EventHandler<ActionEvent> {
-        private final P7_Dhruva_Krupa_LifeGUI_1 life;
+        private final P7_Dhruva_Krupa_LifeGUI_1 lifeApp;
         private final Label label;
 
         NextHandler(P7_Dhruva_Krupa_LifeGUI_1 life, Label label) {
-            this.life = life;
+            this.lifeApp = life;
             this.label = label;
         }
 
         @Override
         public void handle(ActionEvent event) {
-            if (life.lifeModel == null || life.lifeModel.isGameOver()) {
+            final P7_Dhruva_Krupa_LifeModel model = lifeApp.gamePane.getModel();
+            if (model == null || model.isGameOver()) {
                 return;
             }
 
-            life.lifeModel.nextGeneration();
-            life.gridModel = new GridModel<>(life.lifeModel.getBoard());
-            life.gamePane.setModel(life.gridModel);
-            label.setText(String.format("%d", life.lifeModel.getGeneration()));
+            model.nextGeneration();
+            if (!model.isGameOver()) {
+                lifeApp.gamePane.resetCells();
+                label.setText(String.format("%d", model.getGeneration()));
+            }
         }
-    }
-
-    public void setLifeModel(P7_Dhruva_Krupa_LifeModel lifeModel) {
-        this.lifeModel = lifeModel;
-        this.gridModel = new GridModel<>(lifeModel.getBoard());
-        this.gamePane.setModel(gridModel);
     }
 
     @Override
@@ -186,11 +186,10 @@ public class P7_Dhruva_Krupa_LifeGUI_1 extends Application {
             Arrays.fill(row, false);
         }
 
-        gamePane = new BooleanGridPane();
-        gridModel = new GridModel<>(grid);
-
+        gamePane = new BooleanGridPaneExtended();
         gamePane.setTileSize(50);
-        gamePane.setModel(gridModel);
+
+        gamePane.setModel(new P7_Dhruva_Krupa_LifeModel(grid, 0));
         gamePane.setOnMouseClicked(new GamePaneHandler(this));
 
         // Horizontal bottom panel
@@ -215,34 +214,11 @@ public class P7_Dhruva_Krupa_LifeGUI_1 extends Application {
 
         final Insets padding = new Insets(5);
         {
-            Label genLbl = new Label();
+            final Label genLbl = new Label();
             genLbl.setPadding(padding);
             genLbl.setText(String.format("%d", 0));
 
-            Button loadBtn = new Button();
-            loadBtn.setPadding(padding);
-            loadBtn.setText("Load");
-            loadBtn.setOnAction(new LoadHandler(this));
-            gridPane.add(loadBtn, 0, 1);
-
-            Button clearBtn = new Button();
-            clearBtn.setPadding(padding);
-            clearBtn.setText("Clear");
-            clearBtn.setOnAction(new ClearHandler(this, genLbl));
-            gridPane.add(clearBtn, 1, 1);
-
-            Button nextBtn = new Button();
-            nextBtn.setPadding(padding);
-            nextBtn.setText("Next Generation");
-            nextBtn.setOnAction(new NextHandler(this, genLbl));
-            gridPane.add(nextBtn, 2, 1);
-
-            Label genTitleLbl = new Label("Generation");
-            gridPane.add(genTitleLbl, 3, 0);
-            GridPane.setHalignment(genLbl, HPos.CENTER);
-            gridPane.add(genLbl, 3, 1);
-
-            controlSldr = new Slider(0.0, 100.0, 0.0);
+            final Slider controlSldr = new Slider(0.0, 100.0, 0.0);
             controlSldr.setValue(gamePane.getTileSize());
             controlSldr.setMaxWidth(Double.MAX_VALUE);
             controlSldr.setPadding(padding);
@@ -253,14 +229,37 @@ public class P7_Dhruva_Krupa_LifeGUI_1 extends Application {
             controlSldr.setShowTickMarks(true);
             controlSldr.valueProperty().addListener(new SliderHandler(gamePane));
 
-            Label sldrTitleLbl = new Label("Cell size");
+            final Button loadBtn = new Button();
+            loadBtn.setPadding(padding);
+            loadBtn.setText("Load");
+            loadBtn.setOnAction(new LoadHandler(this, controlSldr));
+            gridPane.add(loadBtn, 0, 1);
+
+            final Button clearBtn = new Button();
+            clearBtn.setPadding(padding);
+            clearBtn.setText("Clear");
+            clearBtn.setOnAction(new ClearHandler(this, genLbl));
+            gridPane.add(clearBtn, 1, 1);
+
+            final Button nextBtn = new Button();
+            nextBtn.setPadding(padding);
+            nextBtn.setText("Next Generation");
+            nextBtn.setOnAction(new NextHandler(this, genLbl));
+            gridPane.add(nextBtn, 2, 1);
+
+            final Label genTitleLbl = new Label("Generation");
+            gridPane.add(genTitleLbl, 3, 0);
+            GridPane.setHalignment(genLbl, HPos.CENTER);
+            gridPane.add(genLbl, 3, 1);
+
+            final Label sldrTitleLbl = new Label("Cell size");
             GridPane.setHalignment(sldrTitleLbl, HPos.CENTER);
             gridPane.add(sldrTitleLbl, 4, 0);
             gridPane.add(controlSldr, 4, 1);
         }
 
         // Top most pane containing rest of the layouts
-        BorderPane root = new BorderPane();
+        final BorderPane root = new BorderPane();
         root.setPadding(new Insets(5));
 
         // Hinge everything to top right corner (for center: root.setCenter(gamePane))

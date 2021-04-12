@@ -14,10 +14,9 @@ import java.util.Arrays;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
-public class P7_Dhruva_Krupa_LifeModel {
+public class P7_Dhruva_Krupa_LifeModel extends GridModel<Boolean> {
     private boolean gameOver;
     private int generation;
-    private Boolean[][] board;
 
     // Track various counts to avoid having to loop and count
     private final int[] rowCounts;
@@ -25,19 +24,20 @@ public class P7_Dhruva_Krupa_LifeModel {
     private int totalCount;
 
     public P7_Dhruva_Krupa_LifeModel(Boolean[][] grid, int generation) {
+        super(grid);
+
         gameOver = false;
         totalCount = 0;
-        this.board = grid.clone();
         this.generation = generation;
 
-        rowCounts = new int[board.length];
-        colCounts = new int[board[0].length];
+        rowCounts = new int[getNumRows()];
+        colCounts = new int[getNumCols()];
         Arrays.fill(rowCounts, 0);
         Arrays.fill(colCounts, 0);
 
-        for (int row = 0; row < board.length; ++row) {
-            for (int col = 0; col < board[0].length; ++col) {
-                if (board[row][col]) {
+        for (int row = 0; row < getNumRows(); ++row) {
+            for (int col = 0; col < getNumCols(); ++col) {
+                if (grid[row][col]) {
                     ++rowCounts[row];
                     ++colCounts[row];
                     ++totalCount;
@@ -95,11 +95,11 @@ public class P7_Dhruva_Krupa_LifeModel {
      * @return 1 if present OR 0
      */
     private int getValue(int row, int col) {
-        if (row < 0 || row >= board.length || col < 0 || col >= board[0].length) {
+        if (row < 0 || row >= getNumRows() || col < 0 || col >= getNumCols()) {
             return 0;
         }
 
-        return board[row][col] ? 1 : 0;
+        return getValueAt(row, col) ? 1 : 0;
     }
 
     private int getNeighborsValue(int row, int col) {
@@ -122,42 +122,54 @@ public class P7_Dhruva_Krupa_LifeModel {
         return count;
     }
 
+    public void setValueAt(int row, int col, boolean value) {
+        if (value) {
+            ++rowCounts[row];
+            ++colCounts[col];
+            ++totalCount;
+        } else {
+            --rowCounts[row];
+            --colCounts[col];
+            --totalCount;
+        }
+
+        gameOver = false;
+        super.setValueAt(row, col, value);
+    }
+
     public void nextGeneration() {
-        Boolean[][] newBoard = new Boolean[board.length][board[0].length];
+        final Boolean[][] newBoard = new Boolean[getNumRows()][getNumCols()];
         for (Boolean[] booleans : newBoard) {
             Arrays.fill(booleans, false);
         }
 
-        // Reset all counts since we recompute it as part transitioning to next generation
-        totalCount = 0;
-        Arrays.fill(rowCounts, 0);
-        Arrays.fill(colCounts, 0);
-
-        for (int ii = 0; ii < board.length; ++ii) {
-            for (int jj = 0; jj < board[0].length; ++jj) {
-                int count = getNeighborsValue(ii, jj);
+        for (int row = 0; row < getNumRows(); ++row) {
+            for (int col = 0; col < getNumCols(); ++col) {
+                int count = getNeighborsValue(row, col);
                 if (count == 2 || count == 3) {
                     // Continuation of life OR birth
-                    if (board[ii][jj] || count == 3) {
-                        newBoard[ii][jj] = true;
-                        ++rowCounts[ii];
-                        ++colCounts[jj];
-                        ++totalCount;
+                    if (getValueAt(row, col) || count == 3) {
+                        newBoard[row][col] = true;
                     }
                 }
             }
         }
 
         // Transition to the next generation
-        for (int row = 0; row < newBoard.length; ++row) {
-            if (Arrays.compare(newBoard[row], board[row]) != 0) {
-                board = newBoard;
-                ++generation;
-                return;
+        gameOver = true;
+        for (int row = 0; row < getNumRows(); ++row) {
+            for (int col = 0; col < getNumCols(); ++col) {
+                if (gameOver) {
+                    gameOver = getValueAt(row, col) == newBoard[row][col];
+                }
+
+                setValueAt(row, col, newBoard[row][col]);
             }
         }
 
-        gameOver = true;
+        if (!gameOver) {
+            ++generation;
+        }
     }
 
     public boolean isGameOver() {
@@ -176,15 +188,15 @@ public class P7_Dhruva_Krupa_LifeModel {
 
     public void printBoard() {
         System.out.printf("%3c", ' ');
-        for (int ii = 0; ii < board.length; ++ii) {
-            System.out.printf("%3d", ii);
+        for (int row = 0; row < getNumRows(); ++row) {
+            System.out.printf("%3d", row);
         }
         System.out.println();
 
-        for (int ii = 0; ii < board.length; ++ii) {
-            System.out.printf("%3d", ii);
-            for (int jj = 0; jj < board[0].length; ++jj) {
-                System.out.printf("%3c", board[ii][jj] ? '*' : '.');
+        for (int row = 0; row < getNumRows(); ++row) {
+            System.out.printf("%3d", row);
+            for (int col = 0; col < getNumCols(); ++col) {
+                System.out.printf("%3c", getValueAt(row, col) ? '*' : '.');
             }
 
             System.out.println();
@@ -201,10 +213,6 @@ public class P7_Dhruva_Krupa_LifeModel {
 
     public int totalCount() {
         return totalCount;
-    }
-
-    public Boolean[][] getBoard() {
-        return board.clone();
     }
 
     public static void main(String[] args) throws FileNotFoundException {
