@@ -28,8 +28,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -44,7 +44,7 @@ public class P7_Dhruva_Krupa_LifeGUI_1 extends Application {
     private BooleanGridPane gamePane;
     private Slider controlSldr;
 
-    /** Handler to flip neighboring cell colors when a cell in grid is clicked */
+    /** Handler to flip selected cell color when a cell in grid is clicked */
     static class GamePaneHandler implements EventHandler<MouseEvent> {
         private final P7_Dhruva_Krupa_LifeGUI_1 lifeApp;
 
@@ -57,18 +57,9 @@ public class P7_Dhruva_Krupa_LifeGUI_1 extends Application {
             int row = lifeApp.gamePane.rowForYPos(event.getY());
             int col = lifeApp.gamePane.colForXPos(event.getX());
 
-            for (int rowIdx = row - 1; rowIdx <= row + 1; ++rowIdx) {
-                for (int colIdx = col - 1; colIdx <= col + 1; ++colIdx) {
-                    if (!(rowIdx == row && colIdx == col)) {
-                        try {
-                            Boolean currVal = lifeApp.gridModel.getValueAt(rowIdx, colIdx);
-                            lifeApp.gridModel.setValueAt(rowIdx, colIdx, !currVal);
-                            lifeApp.gamePane.cellChanged(rowIdx, colIdx, currVal, !currVal);
-                        } catch (IndexOutOfBoundsException ignored) {
-                        }
-                    }
-                }
-            }
+            Boolean currVal = lifeApp.gridModel.getValueAt(row, col);
+            lifeApp.gridModel.setValueAt(row, col, !currVal);
+            lifeApp.gamePane.cellChanged(row, col, currVal, !currVal);
 
             Boolean[][] grid =
                     new Boolean[lifeApp.gridModel.getNumRows()][lifeApp.gridModel.getNumCols()];
@@ -198,20 +189,29 @@ public class P7_Dhruva_Krupa_LifeGUI_1 extends Application {
         gamePane = new BooleanGridPane();
         gridModel = new GridModel<>(grid);
 
-        gamePane.setTileSize(10);
+        gamePane.setTileSize(50);
         gamePane.setModel(gridModel);
         gamePane.setOnMouseClicked(new GamePaneHandler(this));
 
         // Horizontal bottom panel
-        HBox hbBottom = new HBox();
-        hbBottom.setFillHeight(true);
-        HBox.setHgrow(hbBottom, Priority.ALWAYS);
+        GridPane gridPane = new GridPane();
+        gridPane.setGridLinesVisible(false);
+        gridPane.setHgap(10);
+        gridPane.setVgap(10);
+        gridPane.setAlignment(Pos.CENTER_LEFT);
 
-        GridPane gpBottom = new GridPane();
-        gpBottom.setHgap(10);
-        gpBottom.setVgap(10);
-        gpBottom.setAlignment(Pos.BOTTOM_CENTER);
-        hbBottom.getChildren().add(gpBottom);
+        // Note: This is very important to get different columns in a grid pane resize when window
+        // size changes. We want the slider to resize only and that is the last column.
+        // https://stackoverflow.com/questions/14753793/javafx-get-gridpane-to-fit-parent
+        ColumnConstraints sldrCol = new ColumnConstraints();
+        sldrCol.setHgrow(Priority.ALWAYS);
+        gridPane.getColumnConstraints()
+                .addAll(
+                        new ColumnConstraints(),
+                        new ColumnConstraints(),
+                        new ColumnConstraints(),
+                        new ColumnConstraints(),
+                        sldrCol);
 
         final Insets padding = new Insets(5);
         {
@@ -223,27 +223,27 @@ public class P7_Dhruva_Krupa_LifeGUI_1 extends Application {
             loadBtn.setPadding(padding);
             loadBtn.setText("Load");
             loadBtn.setOnAction(new LoadHandler(this));
-            gpBottom.add(loadBtn, 0, 1);
+            gridPane.add(loadBtn, 0, 1);
 
             Button clearBtn = new Button();
             clearBtn.setPadding(padding);
             clearBtn.setText("Clear");
             clearBtn.setOnAction(new ClearHandler(this, genLbl));
-            gpBottom.add(clearBtn, 1, 1);
+            gridPane.add(clearBtn, 1, 1);
 
             Button nextBtn = new Button();
             nextBtn.setPadding(padding);
             nextBtn.setText("Next Generation");
             nextBtn.setOnAction(new NextHandler(this, genLbl));
-            gpBottom.add(nextBtn, 2, 1);
+            gridPane.add(nextBtn, 2, 1);
 
             Label genTitleLbl = new Label("Generation");
-            gpBottom.add(genTitleLbl, 3, 0);
-
+            gridPane.add(genTitleLbl, 3, 0);
             GridPane.setHalignment(genLbl, HPos.CENTER);
-            gpBottom.add(genLbl, 3, 1);
+            gridPane.add(genLbl, 3, 1);
 
             controlSldr = new Slider(0.0, 100.0, 0.0);
+            controlSldr.setValue(gamePane.getTileSize());
             controlSldr.setMaxWidth(Double.MAX_VALUE);
             controlSldr.setPadding(padding);
             controlSldr.setMin(0.0);
@@ -252,23 +252,20 @@ public class P7_Dhruva_Krupa_LifeGUI_1 extends Application {
             controlSldr.setShowTickLabels(true);
             controlSldr.setShowTickMarks(true);
             controlSldr.valueProperty().addListener(new SliderHandler(gamePane));
-            controlSldr.setValue(60);
-            HBox.setHgrow(controlSldr, Priority.ALWAYS);
 
-            hbBottom.setAlignment(Pos.BOTTOM_RIGHT);
-            hbBottom.getChildren().add(controlSldr);
+            Label sldrTitleLbl = new Label("Cell size");
+            GridPane.setHalignment(sldrTitleLbl, HPos.CENTER);
+            gridPane.add(sldrTitleLbl, 4, 0);
+            gridPane.add(controlSldr, 4, 1);
         }
 
         // Top most pane containing rest of the layouts
         BorderPane root = new BorderPane();
-        root.setPadding(new Insets(5)); // space between elements and window border
-        root.setCenter(gamePane);
-        root.setBottom(hbBottom);
+        root.setPadding(new Insets(5));
 
-        //        VBox root = new VBox();
-        //        root.setPadding(padding);
-        //        root.setFillWidth(true);
-        //        root.getChildren().addAll(gamePane, hbBottom);
+        // Hinge everything to top right corner (for center: root.setCenter(gamePane))
+        root.setTop(gamePane);
+        root.setBottom(gridPane);
 
         // Create scene since we have the grid to set the size of scene
         final Scene scene =
