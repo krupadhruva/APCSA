@@ -26,6 +26,9 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.Slider;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
@@ -36,11 +39,18 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Arrays;
 
-public class P7_Dhruva_Krupa_LifeGUI_1 extends Application {
+public class P7_Dhruva_Krupa_LifeGUI_1 extends Application implements GenerationListener {
+    private Label generationLabel;
     private BooleanGridPaneExtended gamePane;
+
+    @Override
+    public void generationChanged(int oldVal, int newVal) {
+        generationLabel.setText(String.format("%d", newVal));
+    }
 
     /** Helper class to get the underlying grid model from a grid pane */
     static class BooleanGridPaneExtended extends BooleanGridPane {
@@ -106,8 +116,7 @@ public class P7_Dhruva_Krupa_LifeGUI_1 extends Application {
 
             FileChooser filePicker = new FileChooser();
             filePicker.setTitle("Select file");
-            FileChooser.ExtensionFilter filter =
-                    new FileChooser.ExtensionFilter("Grid Files", "*.txt");
+            FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("*.txt", "*.txt");
             filePicker.getExtensionFilters().add(filter);
 
             final File file = filePicker.showOpenDialog(gamePane.getScene().getWindow());
@@ -115,17 +124,57 @@ public class P7_Dhruva_Krupa_LifeGUI_1 extends Application {
                 return;
             }
 
-            try {
-                // Get existing width of game pane. We can compute new tile size if columsn change
-                // and ensure it fits the existing window size
-                final double width =
-                        lifeApp.gamePane.getModel().getNumCols() * lifeApp.gamePane.getTileSize();
+            // Get existing width of game pane. We can compute new tile size if columsn change
+            // and ensure it fits the existing window size
+            final double width =
+                    lifeApp.gamePane.getModel().getNumCols() * lifeApp.gamePane.getTileSize();
 
-                lifeApp.gamePane.setModel(new P7_Dhruva_Krupa_LifeModel(file.getAbsolutePath()));
-                final double tileSize = width / lifeApp.gamePane.getModel().getNumCols();
-                lifeApp.gamePane.setTileSize(tileSize);
-                controlSldr.setValue(tileSize);
-            } catch (FileNotFoundException ignored) {
+            lifeApp.gamePane
+                    .getModel()
+                    .setGrid(P7_Dhruva_Krupa_LifeModel.makeBoard(file.getAbsolutePath()));
+
+            final double tileSize = width / lifeApp.gamePane.getModel().getNumCols();
+            lifeApp.gamePane.setTileSize(tileSize);
+            controlSldr.setValue(tileSize);
+        }
+    }
+
+    /** Handler to load grid data from a file when Load button is pressed */
+    static class SaveHandler implements EventHandler<ActionEvent> {
+        private final P7_Dhruva_Krupa_LifeGUI_1 lifeApp;
+
+        SaveHandler(P7_Dhruva_Krupa_LifeGUI_1 lifeApp) {
+            this.lifeApp = lifeApp;
+        }
+
+        @Override
+        public void handle(ActionEvent event) {
+            final BooleanGridPane gamePane = lifeApp.gamePane;
+
+            FileChooser filePicker = new FileChooser();
+            filePicker.setTitle("Select file");
+            FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("*.txt", "*.txt");
+            filePicker.getExtensionFilters().add(filter);
+
+            final File file = filePicker.showSaveDialog(gamePane.getScene().getWindow());
+            if (file == null) {
+                return;
+            }
+
+            try (FileOutputStream fh = new FileOutputStream(file)) {
+                P7_Dhruva_Krupa_LifeModel model = lifeApp.gamePane.getModel();
+
+                fh.write(
+                        String.format("%d %d\n", model.getNumRows(), model.getNumCols())
+                                .getBytes());
+                for (int row = 0; row < model.getNumRows(); ++row) {
+                    for (int col = 0; col < model.getNumCols(); ++col) {
+                        if (model.getValueAt(row, col)) {
+                            fh.write(String.format("%d %d\n", row, col).getBytes());
+                        }
+                    }
+                }
+            } catch (IOException ignored) {
             }
         }
     }
@@ -157,11 +206,9 @@ public class P7_Dhruva_Krupa_LifeGUI_1 extends Application {
     /** Handler to show next generation when Next button is clicked */
     static class NextHandler implements EventHandler<ActionEvent> {
         private final P7_Dhruva_Krupa_LifeGUI_1 lifeApp;
-        private final Label label;
 
-        NextHandler(P7_Dhruva_Krupa_LifeGUI_1 life, Label label) {
+        NextHandler(P7_Dhruva_Krupa_LifeGUI_1 life) {
             this.lifeApp = life;
-            this.label = label;
         }
 
         @Override
@@ -174,8 +221,21 @@ public class P7_Dhruva_Krupa_LifeGUI_1 extends Application {
             model.nextGeneration();
             if (!model.isGameOver()) {
                 lifeApp.gamePane.resetCells();
-                label.setText(String.format("%d", model.getGeneration()));
             }
+        }
+    }
+
+    /** Helper class to implement event handler to exit the JavaFx app */
+    static class ExitHandler implements EventHandler<ActionEvent> {
+        private final Stage stage;
+
+        public ExitHandler(Stage stage) {
+            this.stage = stage;
+        }
+
+        @Override
+        public void handle(ActionEvent event) {
+            stage.close();
         }
     }
 
@@ -186,11 +246,29 @@ public class P7_Dhruva_Krupa_LifeGUI_1 extends Application {
             Arrays.fill(row, false);
         }
 
+        generationLabel = new Label();
+
         gamePane = new BooleanGridPaneExtended();
         gamePane.setTileSize(50);
 
         gamePane.setModel(new P7_Dhruva_Krupa_LifeModel(grid, 0));
+        gamePane.getModel().addGenerationListener(this);
         gamePane.setOnMouseClicked(new GamePaneHandler(this));
+
+        // Example menu bar with support to pick image and exit app
+        final MenuBar menuBar = new MenuBar();
+
+        Menu optionsMenu = new Menu("File");
+        menuBar.getMenus().addAll(optionsMenu);
+
+        MenuItem openItm = new MenuItem("Open");
+        MenuItem saveItm = new MenuItem("Save");
+        saveItm.setOnAction(new SaveHandler(this));
+
+        // Exit app from menu bar
+        MenuItem exitItm = new MenuItem("Exit");
+        exitItm.setOnAction(new ExitHandler(stage));
+        optionsMenu.getItems().addAll(openItm, saveItm, exitItm);
 
         // Horizontal bottom panel
         GridPane gridPane = new GridPane();
@@ -214,9 +292,8 @@ public class P7_Dhruva_Krupa_LifeGUI_1 extends Application {
 
         final Insets padding = new Insets(5);
         {
-            final Label genLbl = new Label();
-            genLbl.setPadding(padding);
-            genLbl.setText(String.format("%d", 0));
+            generationLabel.setPadding(padding);
+            generationLabel.setText(String.format("%d", 0));
 
             final Slider controlSldr = new Slider(0.0, 100.0, 0.0);
             controlSldr.setValue(gamePane.getTileSize());
@@ -228,42 +305,37 @@ public class P7_Dhruva_Krupa_LifeGUI_1 extends Application {
             controlSldr.setShowTickLabels(true);
             controlSldr.setShowTickMarks(true);
             controlSldr.valueProperty().addListener(new SliderHandler(gamePane));
-
-            final Button loadBtn = new Button();
-            loadBtn.setPadding(padding);
-            loadBtn.setText("Load");
-            loadBtn.setOnAction(new LoadHandler(this, controlSldr));
-            gridPane.add(loadBtn, 0, 1);
+            openItm.setOnAction(new LoadHandler(this, controlSldr));
 
             final Button clearBtn = new Button();
             clearBtn.setPadding(padding);
             clearBtn.setText("Clear");
-            clearBtn.setOnAction(new ClearHandler(this, genLbl));
-            gridPane.add(clearBtn, 1, 1);
+            clearBtn.setOnAction(new ClearHandler(this, generationLabel));
+            gridPane.add(clearBtn, 0, 1);
 
             final Button nextBtn = new Button();
             nextBtn.setPadding(padding);
             nextBtn.setText("Next Generation");
-            nextBtn.setOnAction(new NextHandler(this, genLbl));
-            gridPane.add(nextBtn, 2, 1);
+            nextBtn.setOnAction(new NextHandler(this));
+            gridPane.add(nextBtn, 1, 1);
 
             final Label genTitleLbl = new Label("Generation");
-            gridPane.add(genTitleLbl, 3, 0);
-            GridPane.setHalignment(genLbl, HPos.CENTER);
-            gridPane.add(genLbl, 3, 1);
+            gridPane.add(genTitleLbl, 2, 0);
+            GridPane.setHalignment(generationLabel, HPos.CENTER);
+            gridPane.add(generationLabel, 2, 1);
 
             final Label sldrTitleLbl = new Label("Cell size");
             GridPane.setHalignment(sldrTitleLbl, HPos.CENTER);
-            gridPane.add(sldrTitleLbl, 4, 0);
-            gridPane.add(controlSldr, 4, 1);
+            gridPane.add(sldrTitleLbl, 3, 0);
+            gridPane.add(controlSldr, 3, 1);
         }
 
         // Top most pane containing rest of the layouts
         final BorderPane root = new BorderPane();
         root.setPadding(new Insets(5));
 
-        // Hinge everything to top right corner (for center: root.setCenter(gamePane))
-        root.setTop(gamePane);
+        root.setTop(menuBar);
+        root.setCenter(gamePane);
         root.setBottom(gridPane);
 
         // Create scene since we have the grid to set the size of scene

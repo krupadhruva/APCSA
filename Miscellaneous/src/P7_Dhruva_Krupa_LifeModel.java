@@ -10,6 +10,7 @@
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -17,10 +18,11 @@ import java.util.Scanner;
 public class P7_Dhruva_Krupa_LifeModel extends GridModel<Boolean> {
     private boolean gameOver;
     private int generation;
+    private final ArrayList<GenerationListener> generationListeners;
 
     // Track various counts to avoid having to loop and count
-    private final int[] rowCounts;
-    private final int[] colCounts;
+    private int[] rowCounts;
+    private int[] colCounts;
     private int totalCount;
 
     public P7_Dhruva_Krupa_LifeModel(Boolean[][] grid, int generation) {
@@ -29,7 +31,12 @@ public class P7_Dhruva_Krupa_LifeModel extends GridModel<Boolean> {
         gameOver = false;
         totalCount = 0;
         this.generation = generation;
+        generationListeners = new ArrayList<>();
 
+        updateGridState();
+    }
+
+    private void updateGridState() {
         rowCounts = new int[getNumRows()];
         colCounts = new int[getNumCols()];
         Arrays.fill(rowCounts, 0);
@@ -37,7 +44,7 @@ public class P7_Dhruva_Krupa_LifeModel extends GridModel<Boolean> {
 
         for (int row = 0; row < getNumRows(); ++row) {
             for (int col = 0; col < getNumCols(); ++col) {
-                if (grid[row][col]) {
+                if (getValueAt(row, col)) {
                     ++rowCounts[row];
                     ++colCounts[row];
                     ++totalCount;
@@ -50,7 +57,7 @@ public class P7_Dhruva_Krupa_LifeModel extends GridModel<Boolean> {
         this(makeBoard(fileName), 0);
     }
 
-    private static Boolean[][] makeBoard(String fileName) {
+    public static Boolean[][] makeBoard(String fileName) {
         // Read file and get rows & columns
         try (Scanner scan = new Scanner(new File(fileName))) {
             if (!scan.hasNextInt()) {
@@ -84,6 +91,16 @@ public class P7_Dhruva_Krupa_LifeModel extends GridModel<Boolean> {
         } catch (FileNotFoundException | InputMismatchException ex) {
             return new Boolean[0][0];
         }
+    }
+
+    public void addGenerationListener(GenerationListener l) {
+        if (!generationListeners.contains(l)) {
+            generationListeners.add(l);
+        }
+    }
+
+    public void removeGenerationListener(GenerationListener l) {
+        generationListeners.remove(l);
     }
 
     /**
@@ -120,6 +137,14 @@ public class P7_Dhruva_Krupa_LifeModel extends GridModel<Boolean> {
         count += getValue(row + 1, col + 1);
 
         return count;
+    }
+
+    public void setGrid(Boolean[][] grid) {
+        super.setGrid(grid);
+        gameOver = false;
+        setGeneration(0);
+
+        updateGridState();
     }
 
     public void setValueAt(int row, int col, boolean value) {
@@ -168,7 +193,7 @@ public class P7_Dhruva_Krupa_LifeModel extends GridModel<Boolean> {
         }
 
         if (!gameOver) {
-            ++generation;
+            setGeneration(getGeneration() + 1);
         }
     }
 
@@ -178,6 +203,17 @@ public class P7_Dhruva_Krupa_LifeModel extends GridModel<Boolean> {
 
     public int getGeneration() {
         return generation;
+    }
+
+    public void setGeneration(int newGeneration) {
+        int oldGeneration = generation;
+        generation = newGeneration;
+
+        if (newGeneration != oldGeneration) {
+            for (GenerationListener l : generationListeners) {
+                l.generationChanged(oldGeneration, newGeneration);
+            }
+        }
     }
 
     public void runLife(int numGenerations) {
