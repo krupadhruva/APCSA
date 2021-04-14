@@ -79,9 +79,23 @@ public class P7_Dhruva_Krupa_LifeGUI_1 extends Application implements Generation
             int row = lifeApp.gamePane.rowForYPos(event.getY());
             int col = lifeApp.gamePane.colForXPos(event.getX());
 
-            Boolean currVal = lifeApp.gamePane.getModel().getValueAt(row, col);
-            lifeApp.gamePane.getModel().setValueAt(row, col, !currVal);
-            lifeApp.gamePane.resetCells();
+            boolean changed = false;
+            final Boolean currVal = lifeApp.gamePane.getModel().getValueAt(row, col);
+            if (event.isPrimaryButtonDown()) {
+                if (!currVal) {
+                    changed = true;
+                    lifeApp.gamePane.getModel().setValueAt(row, col, true);
+                }
+            } else if (event.isSecondaryButtonDown()) {
+                if (currVal) {
+                    changed = true;
+                    lifeApp.gamePane.getModel().setValueAt(row, col, false);
+                }
+            }
+
+            if (changed) {
+                lifeApp.gamePane.resetCells();
+            }
         }
     }
 
@@ -253,7 +267,8 @@ public class P7_Dhruva_Krupa_LifeGUI_1 extends Application implements Generation
 
         gamePane.setModel(new P7_Dhruva_Krupa_LifeModel(grid, 0));
         gamePane.getModel().addGenerationListener(this);
-        gamePane.setOnMouseClicked(new GamePaneHandler(this));
+        gamePane.setOnMouseDragged(new GamePaneHandler(this));
+        gamePane.setOnMousePressed(new GamePaneHandler(this));
 
         // Example menu bar with support to pick image and exit app
         final MenuBar menuBar = new MenuBar();
