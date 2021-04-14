@@ -1,8 +1,8 @@
 /*
  * Name: Krupa Dhruva
- * Date: April 10, 2021
+ * Date: April 14, 2021
  * Period: 7
- * Time Taken: 120 minutes
+ * Time Taken: 150 minutes
  *
  * Lab Reflection:
  * This was mostly refactoring and integrating with game of life.
@@ -10,9 +10,11 @@
  * number of cells in a grid changes. Refactored model to extend
  * GridModel and reuse the boolean grid.
  *
- * Additional features:
- *  - Allows use to build their own life grid by selecting
- *  - Updating running game with additional modification to cells
+ * - Loads game setting tile size to fill the main window
+ * - Scroll bars for game window
+ * - Load & save game
+ * - Menu to open, save and exit
+ * - Generation increment stops when there is no change
  */
 
 import javafx.application.Application;
@@ -29,6 +31,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
@@ -45,6 +48,7 @@ import java.util.Arrays;
 
 public class P7_Dhruva_Krupa_LifeGUI_1 extends Application implements GenerationListener {
     private Label generationLabel;
+    private ScrollPane scrollPane;
     private BooleanGridPaneExtended gamePane;
 
     @Override
@@ -138,10 +142,10 @@ public class P7_Dhruva_Krupa_LifeGUI_1 extends Application implements Generation
                 return;
             }
 
-            // Get existing width of game pane. We can compute new tile size if columsn change
+            // Get existing width of game pane. We can compute new tile size if columns change
             // and ensure it fits the existing window size
             final double width =
-                    lifeApp.gamePane.getModel().getNumCols() * lifeApp.gamePane.getTileSize();
+                    Math.min(lifeApp.scrollPane.getHeight(), lifeApp.scrollPane.getWidth());
 
             lifeApp.gamePane
                     .getModel()
@@ -255,6 +259,7 @@ public class P7_Dhruva_Krupa_LifeGUI_1 extends Application implements Generation
 
     @Override
     public void start(Stage stage) {
+
         final Boolean[][] grid = new Boolean[8][8];
         for (Boolean[] row : grid) {
             Arrays.fill(row, false);
@@ -302,7 +307,6 @@ public class P7_Dhruva_Krupa_LifeGUI_1 extends Application implements Generation
                         new ColumnConstraints(),
                         new ColumnConstraints(),
                         new ColumnConstraints(),
-                        new ColumnConstraints(),
                         sldrCol);
 
         final Insets padding = new Insets(5);
@@ -345,12 +349,15 @@ public class P7_Dhruva_Krupa_LifeGUI_1 extends Application implements Generation
             gridPane.add(controlSldr, 3, 1);
         }
 
+        scrollPane = new ScrollPane();
+        scrollPane.setContent(gamePane);
+
         // Top most pane containing rest of the layouts
         final BorderPane root = new BorderPane();
         root.setPadding(new Insets(5));
 
         root.setTop(menuBar);
-        root.setCenter(gamePane);
+        root.setCenter(scrollPane);
         root.setBottom(gridPane);
 
         // Create scene since we have the grid to set the size of scene
