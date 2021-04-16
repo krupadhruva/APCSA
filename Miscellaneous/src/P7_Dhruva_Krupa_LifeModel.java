@@ -1,11 +1,18 @@
 /*
  * Name: Krupa Dhruva
- * Date: April 10, 2021
+ * Date: April 14, 2021
  * Period: 7
- * Time Taken: 20 minutes
+ * Time Taken: 45 minutes
  *
  * Lab Reflection:
- * I did minor refactoring to return the generation count and not increment generation count if the board remains unchanged
+ * Refactoring to reuse grid from GridModel turned out to be a little
+ * more complex than it should have been. I had optimized the code by
+ * storing the number of live cells in each row and column to avoid
+ * iterating for live cells in a row/column. In hind sight, I would
+ * avoid that and keep my code simple.
+ *
+ * As part of refactoring, I got rid of the optimization and kept it
+ * simple.
  */
 
 import java.io.File;
@@ -20,37 +27,12 @@ public class P7_Dhruva_Krupa_LifeModel extends GridModel<Boolean> {
     private int generation;
     private final ArrayList<GenerationListener> generationListeners;
 
-    // Track various counts to avoid having to loop and count
-    private int[] rowCounts;
-    private int[] colCounts;
-    private int totalCount;
-
     public P7_Dhruva_Krupa_LifeModel(Boolean[][] grid, int generation) {
         super(grid);
 
         gameOver = false;
-        totalCount = 0;
         this.generation = generation;
         generationListeners = new ArrayList<>();
-
-        updateGridState();
-    }
-
-    private void updateGridState() {
-        rowCounts = new int[getNumRows()];
-        colCounts = new int[getNumCols()];
-        Arrays.fill(rowCounts, 0);
-        Arrays.fill(colCounts, 0);
-
-        for (int row = 0; row < getNumRows(); ++row) {
-            for (int col = 0; col < getNumCols(); ++col) {
-                if (getValueAt(row, col)) {
-                    ++rowCounts[row];
-                    ++colCounts[row];
-                    ++totalCount;
-                }
-            }
-        }
     }
 
     public P7_Dhruva_Krupa_LifeModel(String fileName) throws FileNotFoundException {
@@ -143,21 +125,9 @@ public class P7_Dhruva_Krupa_LifeModel extends GridModel<Boolean> {
         super.setGrid(grid);
         gameOver = false;
         setGeneration(0);
-
-        updateGridState();
     }
 
     public void setValueAt(int row, int col, boolean value) {
-        if (value) {
-            ++rowCounts[row];
-            ++colCounts[col];
-            ++totalCount;
-        } else {
-            --rowCounts[row];
-            --colCounts[col];
-            --totalCount;
-        }
-
         gameOver = false;
         super.setValueAt(row, col, value);
     }
@@ -240,15 +210,40 @@ public class P7_Dhruva_Krupa_LifeModel extends GridModel<Boolean> {
     }
 
     public int rowCount(int row) {
-        return (row < 0 || row >= rowCounts.length) ? -1 : rowCounts[row];
+        int count = -1;
+        if (row >= 0 && row < getNumRows()) {
+            count = 0;
+            for (int col = 0; col < getNumCols(); ++col) {
+                if (getValueAt(row, col)) {
+                    ++count;
+                }
+            }
+        }
+
+        return count;
     }
 
     public int colCount(int col) {
-        return (col < 0 || col >= colCounts.length) ? -1 : colCounts[col];
+        int count = -1;
+        if (col >= 0 && col < getNumCols()) {
+            count = 0;
+            for (int row = 0; row < getNumRows(); ++row) {
+                if (getValueAt(row, col)) {
+                    ++count;
+                }
+            }
+        }
+
+        return count;
     }
 
     public int totalCount() {
-        return totalCount;
+        int count = 0;
+        for (int row = 0; row < getNumRows(); ++row) {
+            count += rowCount(row);
+        }
+
+        return count;
     }
 
     public static void main(String[] args) throws FileNotFoundException {
