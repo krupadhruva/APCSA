@@ -83,6 +83,14 @@ public class P7_Dhruva_Krupa_LifeGUI_1 extends Application implements Generation
             int row = lifeApp.gamePane.rowForYPos(event.getY());
             int col = lifeApp.gamePane.colForXPos(event.getX());
 
+            // Check for clicking outside the pane
+            if (row < 0
+                    || col < 0
+                    || row >= lifeApp.gamePane.getModel().getNumRows()
+                    || col >= lifeApp.gamePane.getModel().getNumCols()) {
+                return;
+            }
+
             boolean changed = false;
             final Boolean currVal = lifeApp.gamePane.getModel().getValueAt(row, col);
             if (event.isPrimaryButtonDown()) {
