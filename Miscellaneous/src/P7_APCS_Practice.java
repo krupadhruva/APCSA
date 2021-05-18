@@ -151,4 +151,25 @@ class P7_APCS_Practice {
         int idx = binarySearch(nums, 0, nums.size() - 1, 45);
         System.out.printf("index=%d, count=%d [left=%d, right=%d]%n", idx, count, left, right);
     }
+
+    // Insert into array by shifting down
+    void arrayInsert(int[] arr, int idx, int val) {
+        // Validate arguments for correctness
+        if (idx < 0 || idx >= arr.length) {
+            return;
+        }
+
+        for (int ii = arr.length - 2; ii >= idx; --ii) {
+            arr[ii + 1] = arr[ii];
+        }
+
+        arr[idx] = val;
+    }
+
+    @org.junit.jupiter.api.Test
+    void arrayInsertTest() {
+        int[] arr = {1, 2, 3, 5, 0};
+        arrayInsert(arr, 3, 4);
+        System.out.println(Arrays.toString(arr));
+    }
 }
