@@ -119,7 +119,7 @@ class P7_APCS_Practice {
     // Keep track of binary search visits
     static int left = 0, right = 0, count = 0;
 
-    int binarySearch(List<Integer> theList, int low, int high, int target) {
+    <T extends Comparable<T>> int binarySearch(List<T> theList, int low, int high, T target) {
         ++count;
 
         if (low > high) {
@@ -128,9 +128,12 @@ class P7_APCS_Practice {
 
         int middle = (low + high) / 2;
 
-        if (target == theList.get(middle)) {
+        if (target.compareTo(theList.get(middle)) == 0) {
+            System.out.printf(
+                    "\tfound: low=%d, high=%d, middle/index=%d, left=%d, right=%d%n",
+                    low, high, middle, left, right);
             return middle;
-        } else if (target < theList.get(middle)) {
+        } else if (target.compareTo(theList.get(middle)) < 0) {
             ++left;
             System.out.printf("\tleft (%d): low=%d, high=%d%n", left, low, middle - 1);
             return binarySearch(theList, low, middle - 1, target);
