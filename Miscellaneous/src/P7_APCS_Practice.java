@@ -166,10 +166,23 @@ class P7_APCS_Practice {
         arr[idx] = val;
     }
 
+    // Insert into array by copying range to shift down (aka memcpy)
+    void arrayCopyInsert(int[] arr, int idx, int val) {
+        if (idx < 0 || idx >= arr.length) {
+            return;
+        }
+
+        System.arraycopy(arr, idx, arr, idx + 1, arr.length - (idx + 1));
+        arr[idx] = val;
+    }
+
     @org.junit.jupiter.api.Test
     void arrayInsertTest() {
         int[] arr = {1, 2, 3, 5, 0};
         arrayInsert(arr, 3, 4);
+        System.out.println(Arrays.toString(arr));
+
+        arrayCopyInsert(arr, 0, 0);
         System.out.println(Arrays.toString(arr));
     }
 }
