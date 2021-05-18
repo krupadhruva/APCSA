@@ -4,6 +4,7 @@ import java.util.Iterator;
 import java.util.List;
 
 class P7_APCS_Practice {
+
     int[] mergeAlternateArrays(int[] a, int[] b) {
         int[] big, small;
         if (a.length > b.length) {
@@ -184,5 +185,50 @@ class P7_APCS_Practice {
 
         arrayCopyInsert(arr, 0, 0);
         System.out.println(Arrays.toString(arr));
+    }
+
+    @org.junit.jupiter.api.Test
+    void removeZerosTest() {
+        int[] arr = {1, 0, 2, 0, 3, 4};
+
+        // Copy all non-zero to top of array
+        int tidx = 0;
+        for (int ii = 0; ii < arr.length; ++ii) {
+            if (arr[ii] != 0) {
+                arr[tidx++] = arr[ii];
+            }
+        }
+
+        // Move all 0s to end
+        for (int ii = tidx; ii < arr.length; ++ii) {
+            arr[ii] = 0;
+        }
+
+        // Create new array with 0s removed & resized
+        int[] res = Arrays.copyOf(arr, tidx);
+
+        System.out.println(Arrays.toString(res));
+    }
+
+    @org.junit.jupiter.api.Test
+    void removeZeros1Test() {
+        int[] arr = {1, 0, 2, 0, 3, 4};
+
+        int zeros = 0;
+        for (int val : arr) {
+            if (val == 0) {
+                ++zeros;
+            }
+        }
+
+        int[] res = new int[arr.length - zeros];
+        int tidx = 0;
+        for (int val : arr) {
+            if (val != 0) {
+                res[tidx++] = val;
+            }
+        }
+
+        System.out.println(Arrays.toString(res));
     }
 }
