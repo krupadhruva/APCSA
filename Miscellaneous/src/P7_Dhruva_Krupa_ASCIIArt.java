@@ -16,6 +16,7 @@
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -48,14 +49,19 @@ import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.awt.*;
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+
+import javax.imageio.ImageIO;
 
 public class P7_Dhruva_Krupa_ASCIIArt extends Application {
     private static final char[] ASCII_MAP = {'@', '#', '8', '&', 'o', ':', '*', '.', ' '};
@@ -96,7 +102,7 @@ public class P7_Dhruva_Krupa_ASCIIArt extends Application {
      * @param asciiHeight Height of tile for getting average grey code
      * @return String representation of image
      */
-    public String toASCII(final Image image, int asciiWidth, int asciiHeight) {
+    public String imageToString(final Image image, int asciiWidth, int asciiHeight) {
         int width = (int) Math.round(image.getWidth());
         int height = (int) Math.round(image.getHeight());
         final PixelReader reader = image.getPixelReader();
@@ -155,6 +161,18 @@ public class P7_Dhruva_Krupa_ASCIIArt extends Application {
         }
 
         return sb.toString();
+    }
+
+    public Image stringToImage(String ascii, Font font) {
+        final Text txtField = new Text(ascii);
+
+        // NOTE: Extremely important to center the text to avoid skewing image due
+        // to justification AND using mono spaced fonts
+        txtField.setTextAlignment(TextAlignment.CENTER);
+        txtField.setFont(font);
+
+        // Convert text field to image and set the new image
+        return txtField.snapshot(new SnapshotParameters(), null);
     }
 
     private void loadImageFile(ImageView imageView, Image pickedImage) {
@@ -216,8 +234,30 @@ public class P7_Dhruva_Krupa_ASCIIArt extends Application {
         return FXCollections.observableArrayList(monoFamilyList);
     }
 
+    private void runCLI(Map<String, String> args) {
+        File target = new File(args.get("target"));
+        Image source = new Image(new File(args.get("source")).toURI().toString());
+        int tileWidth = Integer.parseInt(args.get("tile-width"));
+        int tileHeight = Integer.parseInt(args.get("tile-height"));
+        Font font = Font.font(args.get("font"));
+        String imageFormat = args.get("format");
+
+        Image asciiImage = stringToImage(imageToString(source, tileWidth, tileHeight), font);
+        try {
+            ImageIO.write(SwingFXUtils.fromFXImage(asciiImage, null), imageFormat, target);
+        } catch (IOException ex) {
+            System.err.println("failed to convert image with exception: " + ex);
+        }
+    }
+
     @Override
     public void start(Stage rootStage) throws Exception {
+        Map<String, String> args = getParameters().getNamed();
+        if (!args.isEmpty()) {
+            runCLI(args);
+            return;
+        }
+
         final ObservableList<String> monoFonts = getMonoFontFamilyNames();
         final Font defaultFont = Font.font(monoFonts.get(0));
 
@@ -332,25 +372,20 @@ public class P7_Dhruva_Krupa_ASCIIArt extends Application {
             applyBtn.setOnAction(
                     event -> {
                         final String ascii =
-                                toASCII(
+                                imageToString(
                                         imageView.getImage(),
                                         tileWidth.getValue(),
                                         tileHeight.getValue());
-
-                        final Text txtField = new Text(ascii);
-                        // NOTE: Extremely important to center the text to avoid skewing image due
-                        // to justification AND using mono spaced fonts
-                        txtField.setTextAlignment(TextAlignment.CENTER);
-                        txtField.setFont(Font.font(asciiFonts.getValue()));
-
-                        // Convert text field to image and set the new image
-                        final Image asciiImg = txtField.snapshot(new SnapshotParameters(), null);
-                        imageView.setImage(asciiImg);
+                        imageView.setImage(stringToImage(ascii, Font.font(asciiFonts.getValue())));
                     });
 
             hbBottom.getChildren().addAll(cancelBtn, vSpace, applyBtn);
         }
 
         stage.show();
+    }
+
+    public static void main(String[] args) {
+        launch(args);
     }
 }
