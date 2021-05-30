@@ -37,6 +37,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -44,7 +45,6 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
@@ -94,9 +94,10 @@ public class P7_Dhruva_Krupa_ASCIIArt extends Application {
         int width = (int) Math.round(image.getWidth());
         int height = (int) Math.round(image.getHeight());
         final PixelReader reader = image.getPixelReader();
-        final int[][] asciiGrid =
-                new int[(int) Math.round((double) height / asciiHeight)]
-                        [(int) Math.round((double) width / asciiWidth)];
+
+        // TODO: Can we eliminate the need for this grid by processing each tile
+        // and translating it to output string immediately
+        final int[][] asciiGrid = new int[height + 1][width + 1];
 
         // Required to normalize image by finding relative distance among pixels and ASCII map
         final Set<Integer> unique = new HashSet<>();
@@ -106,21 +107,20 @@ public class P7_Dhruva_Krupa_ASCIIArt extends Application {
             for (int x = 0; x < width; x += asciiWidth) {
                 // Find average pixel value of a given tile
                 int avgRGB = 0;
-                for (int yy = y; yy < y + asciiHeight; ++yy) {
-                    for (int xx = x; xx < x + asciiWidth; ++xx) {
-                        avgRGB += colorToRGB(reader.getColor(x, y).grayscale());
+                for (int yy = 0; yy < asciiHeight && y + yy < height; ++yy) {
+                    for (int xx = 0; xx < asciiWidth && x + xx < width; ++xx) {
+                        avgRGB += colorToRGB(reader.getColor(x + xx, y + yy).grayscale());
                     }
                 }
 
                 // Compute average pixel value for the tile
                 avgRGB /= (asciiWidth * asciiHeight);
+                unique.add(avgRGB);
 
-                // Since we round off, the array boundary might not be exact
-                try {
-                    asciiGrid[y / asciiHeight][x / asciiWidth] = avgRGB;
-                    unique.add(avgRGB);
-                } catch (IndexOutOfBoundsException ignored) {
-                    break;
+                for (int yy = 0; yy < asciiHeight && y + yy < height; ++yy) {
+                    for (int xx = 0; xx < asciiWidth && x + xx < width; ++xx) {
+                        asciiGrid[y + yy][x + xx] = avgRGB;
+                    }
                 }
             }
         }
@@ -135,22 +135,19 @@ public class P7_Dhruva_Krupa_ASCIIArt extends Application {
 
         // Fill output string with ASCII chars that have the same relative distance
         // as average pixel value has among other average pixels in the image
-        char[] tile = new char[width];
-        for (int[] row : asciiGrid) {
-            int offset = 0;
-            for (int val : row) {
-                float idx = pixels.indexOf(val);
-                char ch = asciiRep[Math.round(idx * (asciiRep.length - 1) / (pixels.size() - 1))];
+        for (int ii = 0; ii < height; ++ii) {
+            for (int jj = 0; jj < width; ++jj) {
+                // Find the distance of averaged gray value in sorted list
+                double idx = pixels.indexOf(asciiGrid[ii][jj]);
 
-                Arrays.fill(tile, offset, offset + asciiWidth, ch);
-                offset += asciiWidth;
+                // Find ASCII equivalent at the same relative distance in ASCII char map
+                int rel = (int) Math.round(idx * (asciiRep.length - 1) / (pixels.size() - 1));
+                sb.append(asciiRep[rel]);
             }
 
-            for (int r = 0; r < asciiHeight; ++r) {
-                sb.append(tile);
-                sb.append('\n');
-            }
+            sb.append('\n');
         }
+
         return sb.toString();
     }
 
@@ -282,14 +279,19 @@ public class P7_Dhruva_Krupa_ASCIIArt extends Application {
             applyBtn.setText("Convert");
             applyBtn.setOnAction(
                     event -> {
-                        // TODO: Tile size should be customizable
                         final String ascii =
                                 toASCII(
                                         imageView.getImage(),
                                         tileWidth.getValue(),
                                         tileHeight.getValue());
-                        final Image asciiImg =
-                                new Text(ascii).snapshot(new SnapshotParameters(), null);
+
+                        final Text txtField = new Text(ascii);
+                        // NOTE: Extremely important to center the text to avoid skewing image due
+                        // to justification
+                        txtField.setTextAlignment(TextAlignment.CENTER);
+
+                        // Convert text field to image and set the new image
+                        final Image asciiImg = txtField.snapshot(new SnapshotParameters(), null);
                         imageView.setImage(asciiImg);
                     });
 
