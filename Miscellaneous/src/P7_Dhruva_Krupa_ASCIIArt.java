@@ -11,6 +11,15 @@
  *
  * Learned an approach to retain the color distribution in an image when
  * generating ASCII art image based on relative distances.
+ *
+ * Details:
+ * To compile:
+ * javac --module-path ~/installs/javafx-sdk-16/lib --add-modules javafx.controls,javafx.media,javafx.swing P7_Dhruva_Krupa_ASCIIArt.java
+ *
+ * To run:
+ * java --module-path ~/installs/javafx-sdk-16/lib --add-modules javafx.controls,javafx.media,javafx.swing P7_Dhruva_Krupa_ASCIIArt --source=eagle.jpg
+ *
+ * Converting 'eagle.jpg' to ASCII image 'eagle.jpg.out.png'
  */
 
 import javafx.application.Application;
@@ -234,14 +243,18 @@ public class P7_Dhruva_Krupa_ASCIIArt extends Application {
         return FXCollections.observableArrayList(monoFamilyList);
     }
 
-    private void runCLI(Map<String, String> args) {
-        File target = new File(args.get("target"));
-        Image source = new Image(new File(args.get("source")).toURI().toString());
-        int tileWidth = Integer.parseInt(args.get("tile-width"));
-        int tileHeight = Integer.parseInt(args.get("tile-height"));
-        Font font = Font.font(args.get("font"));
-        String imageFormat = args.get("format");
+    private void runCLI(Map<String, String> args, Font defaultFont) {
+        final String imageFormat = "png";
 
+        String src = args.get("source");
+        Image source = new Image(new File(src).toURI().toString());
+
+        int tileWidth = Integer.parseInt(args.getOrDefault("tile-width", "1"));
+        int tileHeight = Integer.parseInt(args.getOrDefault("tile-height", "1"));
+        Font font = Font.font(args.getOrDefault("font", defaultFont.getFamily()));
+        File target = new File(args.getOrDefault("target", src + ".out." + imageFormat));
+
+        System.out.printf("Converting '%s' to ASCII image '%s'%n", src, target.getName());
         Image asciiImage = stringToImage(imageToString(source, tileWidth, tileHeight), font);
         try {
             ImageIO.write(SwingFXUtils.fromFXImage(asciiImage, null), imageFormat, target);
@@ -252,14 +265,15 @@ public class P7_Dhruva_Krupa_ASCIIArt extends Application {
 
     @Override
     public void start(Stage rootStage) throws Exception {
-        Map<String, String> args = getParameters().getNamed();
-        if (!args.isEmpty()) {
-            runCLI(args);
-            return;
-        }
-
         final ObservableList<String> monoFonts = getMonoFontFamilyNames();
         final Font defaultFont = Font.font(monoFonts.get(0));
+
+        Map<String, String> args = getParameters().getNamed();
+        if (!args.isEmpty()) {
+            runCLI(args, defaultFont);
+            rootStage.close();
+            System.exit(0);
+        }
 
         // Create a new stage and set it to modal - we want focus
         Stage stage = new Stage();
