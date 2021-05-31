@@ -54,6 +54,7 @@ import javafx.scene.text.FontPosture;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import javafx.scene.transform.Transform;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -172,18 +173,6 @@ public class P7_Dhruva_Krupa_ASCIIArt extends Application {
         return sb.toString();
     }
 
-    public Image stringToImage(String ascii, Font font) {
-        final Text txtField = new Text(ascii);
-
-        // NOTE: Extremely important to center the text to avoid skewing image due
-        // to justification AND using mono spaced fonts
-        txtField.setTextAlignment(TextAlignment.CENTER);
-        txtField.setFont(font);
-
-        // Convert text field to image and set the new image
-        return txtField.snapshot(new SnapshotParameters(), null);
-    }
-
     private void loadImageFile(ImageView imageView, Image pickedImage) {
         if (pickedImage == null) {
             FileChooser imagePicker = new FileChooser();
@@ -252,10 +241,27 @@ public class P7_Dhruva_Krupa_ASCIIArt extends Application {
         int tileWidth = Integer.parseInt(args.getOrDefault("tile-width", "1"));
         int tileHeight = Integer.parseInt(args.getOrDefault("tile-height", "1"));
         Font font = Font.font(args.getOrDefault("font", defaultFont.getFamily()));
+        boolean resize = Boolean.parseBoolean(args.getOrDefault("resize", "false"));
         File target = new File(args.getOrDefault("target", src + ".out." + imageFormat));
 
         System.out.printf("Converting '%s' to ASCII image '%s'%n", src, target.getName());
-        Image asciiImage = stringToImage(imageToString(source, tileWidth, tileHeight), font);
+
+        final String ascii = imageToString(source, tileWidth, tileHeight);
+        final Text txtField = new Text(ascii);
+        txtField.setTextAlignment(TextAlignment.CENTER);
+        txtField.setFont(font);
+        Image asciiImage = txtField.snapshot(null, null);
+
+        // Resize image to match the source image
+        if (resize) {
+            SnapshotParameters params = new SnapshotParameters();
+            params.setTransform(
+                    Transform.scale(
+                            source.getWidth() / asciiImage.getWidth(),
+                            source.getHeight() / asciiImage.getHeight()));
+            asciiImage = txtField.snapshot(params, null);
+        }
+
         try {
             ImageIO.write(SwingFXUtils.fromFXImage(asciiImage, null), imageFormat, target);
         } catch (IOException ex) {
@@ -271,7 +277,6 @@ public class P7_Dhruva_Krupa_ASCIIArt extends Application {
         Map<String, String> args = getParameters().getNamed();
         if (!args.isEmpty()) {
             runCLI(args, defaultFont);
-            rootStage.close();
             System.exit(0);
         }
 
@@ -390,7 +395,12 @@ public class P7_Dhruva_Krupa_ASCIIArt extends Application {
                                         imageView.getImage(),
                                         tileWidth.getValue(),
                                         tileHeight.getValue());
-                        imageView.setImage(stringToImage(ascii, Font.font(asciiFonts.getValue())));
+
+                        final Text txtField = new Text(ascii);
+                        txtField.setTextAlignment(TextAlignment.CENTER);
+                        txtField.setFont(Font.font(asciiFonts.getValue()));
+
+                        imageView.setImage(txtField.snapshot(null, null));
                     });
 
             hbBottom.getChildren().addAll(cancelBtn, vSpace, applyBtn);
@@ -400,6 +410,33 @@ public class P7_Dhruva_Krupa_ASCIIArt extends Application {
     }
 
     public static void main(String[] args) {
+        for (String arg : args) {
+            if (arg.equals("-h") || arg.equals("--help")) {
+                String usage =
+                        "Convert image to ASCII image with smoothening using tile and following"
+                                + " options\n\n"
+                                + "  --source\tPath to image that needs to be converted\n"
+                                + "  --target\tOptional path to generated ASCII image. Defaults to"
+                                + " source image name appended with '.out.png'.\n"
+                                + "  --tile-width\tOptional width of tile to average RGB value in"
+                                + " source image. Defaults to 1.\n"
+                                + "  --tile-height\tOptional height of tile to average RGB value in"
+                                + " source image. Defaults to 1.\n"
+                                + "  --font\tOptional name of font family to use. Defaults to"
+                                + " first available monospace font.\n"
+                                + "  --resize\tOptional boolean indicating if output ASCII image"
+                                + " size should be resized to source image size. Defaults to"
+                                + " false.\n\n"
+                                + "example: "
+                                + new Object() {}.getClass().getEnclosingClass().getSimpleName()
+                                + " --source=/path/to/source.jpeg --target=/path/to/output.png"
+                                + " --tile-width=3 --tile-height=3 --font=Monaco"
+                                + " --resize=true\n\n";
+                System.out.print(usage);
+                System.exit(0);
+            }
+        }
+
         launch(args);
     }
 }
