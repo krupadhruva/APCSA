@@ -392,7 +392,8 @@ public class P7_Dhruva_Krupa_ASCIIArt extends Application {
                     event -> {
                         final String ascii =
                                 imageToString(
-                                        imageView.getImage(),
+                                        // Use snapshot to support converting multiple times
+                                        imageView.snapshot(null, null),
                                         tileWidth.getValue(),
                                         tileHeight.getValue());
 
