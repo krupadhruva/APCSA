@@ -31,6 +31,7 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Button;
@@ -57,6 +58,7 @@ import javafx.scene.text.TextAlignment;
 import javafx.scene.transform.Transform;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import java.awt.*;
@@ -299,10 +301,32 @@ public class P7_Dhruva_Krupa_ASCIIArt extends Application {
         MenuItem selectItm = new MenuItem("Image path");
         selectItm.setOnAction(event -> loadImageFile(imageView, null));
 
+        MenuItem saveItm = new MenuItem("Save as");
+        saveItm.setOnAction(
+                event -> {
+                    FileChooser imagePicker = new FileChooser();
+                    imagePicker.setTitle("Save image");
+                    FileChooser.ExtensionFilter filter =
+                            new FileChooser.ExtensionFilter("Image Files", "*.png");
+                    imagePicker.getExtensionFilters().add(filter);
+
+                    final File file = imagePicker.showSaveDialog(imageView.getScene().getWindow());
+                    if (file == null) {
+                        return;
+                    }
+
+                    Image source = imageView.getImage();
+                    try {
+                        ImageIO.write(SwingFXUtils.fromFXImage(source, null), "png", file);
+                    } catch (IOException ex) {
+                        System.err.println("failed to convert image with exception: " + ex);
+                    }
+                });
+
         // Exit app from menu bar
         MenuItem exitItm = new MenuItem("Exit");
         exitItm.setOnAction(new ExitHandler(stage));
-        optionsMenu.getItems().addAll(selectItm, exitItm);
+        optionsMenu.getItems().addAll(selectItm, saveItm, exitItm);
 
         Menu aboutMenu = new Menu("About");
         aboutMenu.getItems().addAll(new MenuItem("Help"), new MenuItem("Version"));
@@ -390,18 +414,33 @@ public class P7_Dhruva_Krupa_ASCIIArt extends Application {
             applyBtn.setText("Convert");
             applyBtn.setOnAction(
                     event -> {
+                        Image source = imageView.getImage();
+                        SnapshotParameters params = null;
+
+                        // Resize image to screen size to ensure snapshot does not crash
+                        final Rectangle2D bounds = Screen.getPrimary().getBounds();
+                        if (source.getWidth() > bounds.getWidth()
+                                || source.getHeight() > bounds.getHeight()) {
+                            params = new SnapshotParameters();
+                            params.setTransform(
+                                    Transform.scale(
+                                            bounds.getWidth() / source.getWidth(),
+                                            bounds.getHeight() / source.getHeight()));
+                        }
+
+                        source = imageView.snapshot(params, null);
+
                         final String ascii =
                                 imageToString(
                                         // Use snapshot to support converting multiple times
-                                        imageView.snapshot(null, null),
-                                        tileWidth.getValue(),
-                                        tileHeight.getValue());
+                                        source, tileWidth.getValue(), tileHeight.getValue());
 
                         final Text txtField = new Text(ascii);
                         txtField.setTextAlignment(TextAlignment.CENTER);
                         txtField.setFont(Font.font(asciiFonts.getValue()));
+                        final Image asciiImg = txtField.snapshot(null, null);
 
-                        imageView.setImage(txtField.snapshot(null, null));
+                        imageView.setImage(asciiImg);
                     });
 
             hbBottom.getChildren().addAll(cancelBtn, vSpace, applyBtn);
