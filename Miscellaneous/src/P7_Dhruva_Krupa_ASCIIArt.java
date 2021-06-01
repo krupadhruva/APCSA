@@ -422,10 +422,12 @@ public class P7_Dhruva_Krupa_ASCIIArt extends Application {
                         if (source.getWidth() > bounds.getWidth()
                                 || source.getHeight() > bounds.getHeight()) {
                             params = new SnapshotParameters();
-                            params.setTransform(
-                                    Transform.scale(
+                            // Maintain aspect ratio by scaling the same in both axes
+                            double scale =
+                                    Math.min(
                                             bounds.getWidth() / source.getWidth(),
-                                            bounds.getHeight() / source.getHeight()));
+                                            bounds.getHeight() / source.getHeight());
+                            params.setTransform(Transform.scale(scale, scale));
                         }
 
                         source = imageView.snapshot(params, null);
