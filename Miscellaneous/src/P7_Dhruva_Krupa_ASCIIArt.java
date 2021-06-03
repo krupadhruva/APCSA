@@ -1,16 +1,18 @@
 /*
  * Name: Krupa Dhruva
- * Date: May 29, 2021
+ * Date: June 03, 2021
  * Period: 7
- * Time Taken: 120 minutes
+ * Time Taken: ~180 minutes
  *
  * Lab Reflection:
  * I was surprised there was no built in method to convert color to a single
- * RGB value. Breaking the image to tiles and finding average values was a
- * good tip to prevent a dominant part of an image to affect the whole image.
+ * RGB value in JavaFx. Breaking the image to tiles and finding average values
+ * was a good tip to prevent a dominant part of an image to affect the whole image.
  *
  * Learned an approach to retain the color distribution in an image when
- * generating ASCII art image based on relative distances.
+ * generating ASCII art image based on relative distances. Ability to interpret
+ * each pixel gives me some ideas on how character recognition from handwritten
+ * documents might be implemented.
  *
  * Details:
  * To compile:
@@ -61,7 +63,6 @@ import javafx.stage.Modality;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -76,7 +77,9 @@ import java.util.Set;
 import javax.imageio.ImageIO;
 
 public class P7_Dhruva_Krupa_ASCIIArt extends Application {
+    // ASCII char map to use for generating image
     private static final char[] ASCII_MAP = {'@', '#', '8', '&', 'o', ':', '*', '.', ' '};
+
     private static final String IMAGE_URL =
             "https://i.pinimg.com/originals/6f/c6/31/6fc63119e8e3e2c46f0d3b621f38a91b.jpg";
 
@@ -95,10 +98,9 @@ public class P7_Dhruva_Krupa_ASCIIArt extends Application {
     }
 
     private int colorToRGB(Color color) {
-        int r = (int) (color.getRed() * 255);
-        int g = (int) (color.getGreen() * 255);
-        int b = (int) (color.getBlue() * 255);
-        return ((r << 16) + (g << 8) + b);
+        return new java.awt.Color(
+                        (float) color.getRed(), (float) color.getGreen(), (float) color.getBlue())
+                .getRGB();
     }
 
     /**
@@ -155,6 +157,7 @@ public class P7_Dhruva_Krupa_ASCIIArt extends Application {
         final List<Integer> pixels = new ArrayList<>(unique);
         pixels.sort(Comparator.naturalOrder());
 
+        // Since we know the expected size of line, reserve the capacity
         final StringBuilder sb = new StringBuilder((width + 1) * height);
 
         // Fill output string with ASCII chars that have the same relative distance
@@ -175,6 +178,7 @@ public class P7_Dhruva_Krupa_ASCIIArt extends Application {
         return sb.toString();
     }
 
+    // Helper method to load image or selected image in image view with proper fit
     private void loadImageFile(ImageView imageView, Image pickedImage) {
         if (pickedImage == null) {
             FileChooser imagePicker = new FileChooser();
@@ -234,7 +238,9 @@ public class P7_Dhruva_Krupa_ASCIIArt extends Application {
         return FXCollections.observableArrayList(monoFamilyList);
     }
 
+    // Support running from CLI (with no user interaction) for bulk conversions
     private void runCLI(Map<String, String> args, Font defaultFont) {
+        // FIXME: Unable to write image in any other format other than PNG!
         final String imageFormat = "png";
 
         String src = args.get("source");
@@ -283,13 +289,19 @@ public class P7_Dhruva_Krupa_ASCIIArt extends Application {
         }
 
         // Create a new stage and set it to modal - we want focus
-        Stage stage = new Stage();
+        final Stage stage = new Stage();
         stage.initOwner(rootStage);
         stage.setAlwaysOnTop(true);
         stage.initModality(Modality.WINDOW_MODAL);
 
-        Image image = new Image(IMAGE_URL);
-        ImageView imageView = new ImageView();
+        final ImageView imageView = new ImageView();
+        imageView.setOnZoom(
+                event -> {
+                    imageView.setScaleX(imageView.getScaleX() * event.getZoomFactor());
+                    imageView.setScaleY(imageView.getScaleY() * event.getZoomFactor());
+                });
+
+        final Image image = new Image(IMAGE_URL);
         if (!image.isError()) {
             loadImageFile(imageView, image);
         }
@@ -434,7 +446,8 @@ public class P7_Dhruva_Krupa_ASCIIArt extends Application {
 
                         final String ascii =
                                 imageToString(
-                                        // Use snapshot to support converting multiple times
+                                        // Note: Use snapshot to support converting multiple times,
+                                        // else crashes with exception on 2nd conversion
                                         source, tileWidth.getValue(), tileHeight.getValue());
 
                         final Text txtField = new Text(ascii);
