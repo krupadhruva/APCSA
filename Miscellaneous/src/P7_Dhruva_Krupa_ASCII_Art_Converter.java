@@ -16,10 +16,10 @@
  *
  * Details:
  * To compile:
- * javac --module-path ~/installs/javafx-sdk-16/lib --add-modules javafx.controls,javafx.media,javafx.swing P7_Dhruva_Krupa_ASCIIArt.java
+ * javac --module-path ~/installs/javafx-sdk-16/lib --add-modules javafx.controls,javafx.media,javafx.swing P7_Dhruva_Krupa_ASCII_Art_Converter.java
  *
  * To run:
- * java --module-path ~/installs/javafx-sdk-16/lib --add-modules javafx.controls,javafx.media,javafx.swing P7_Dhruva_Krupa_ASCIIArt --source=eagle.jpg
+ * java --module-path ~/installs/javafx-sdk-16/lib --add-modules javafx.controls,javafx.media,javafx.swing P7_Dhruva_Krupa_ASCII_Art_Converter --source=eagle.jpg
  *
  * Converting 'eagle.jpg' to ASCII image 'eagle.jpg.out.png'
  */
@@ -76,7 +76,7 @@ import java.util.Set;
 
 import javax.imageio.ImageIO;
 
-public class P7_Dhruva_Krupa_ASCIIArt extends Application {
+public class P7_Dhruva_Krupa_ASCII_Art_Converter extends Application {
     // ASCII char map to use for generating image
     private static final char[] ASCII_MAP = {'@', '#', '8', '&', 'o', ':', '*', '.', ' '};
 
